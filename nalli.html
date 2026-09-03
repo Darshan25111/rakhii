@@ -1,0 +1,2684 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>🎀 Rakhi Special + Puzzle Game</title>
+
+    <!-- ========================================================== -->
+    <!-- 🔽 सभी PATHS एक जगह – यहाँ बदलें (Fallback भी सेट) ======= -->
+    <!-- ========================================================== -->
+    <style>
+        /* इमेज PATHS (Page 2 और 3 की Background Images) */
+        #page2 .modal {
+            background: rgba(0, 0, 0, 0.3) url('image/Bond3.jpeg') center/cover no-repeat;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        #page3 .modal {
+            background: rgba(0, 0, 0, 0.3) url('image/Bond1.png') center/cover no-repeat;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+    </style>
+
+    <script>
+        // ----- PUZZLE IMAGE & VIDEO PATHS (यहाँ बदलें, Fallback भी सेट) -----
+        const PUZZLE_IMAGE = "C:/Users/tzuyu/OneDrive/Desktop/Bond1.png";   // अपनी इमेज डालें
+        const VIDEO_URL = "video/surprise.mp4";         // अपना वीडियो डालें
+
+        // Fallback URLs (अगर उपरोक्त Path काम न करें तो ये Use होंगे)
+        const DEFAULT_PUZZLE_IMAGE = "https://picsum.photos/seed/puzzle/400/400";
+        const DEFAULT_VIDEO_URL = "https://www.w3schools.com/html/mov_bbb.mp4";
+    </script>
+
+    <!-- ========================================================== -->
+    <!-- 🔽 Background Music – अपनी म्यूज़िक फ़ाइल का PATH यहाँ डालें -->
+    <!-- ========================================================== -->
+    <audio id="bgMusic" loop preload="auto" muted>
+        <source src="music/rakhi.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <style>
+        /* ---------- RESET & BASE ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', 'Arial', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            background: #0a0e1a;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ---------- BACKGROUND ANIMATION (Canvas) ---------- */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ---------- FLOATING ELEMENTS (CSS) ---------- */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .float-item {
+            position: absolute;
+            font-size: 2rem;
+            animation: floatUp linear infinite;
+            opacity: 0.7;
+            will-change: transform;
+            filter: drop-shadow(0 0 10px rgba(100, 200, 255, 0.3));
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.9;
+            }
+            90% {
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(720deg) scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        /* ---------- PAGES ---------- */
+        .page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0.9) rotateY(-10deg);
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease;
+        }
+
+        .page.active {
+            opacity: 1;
+            transform: scale(1) rotateY(0deg);
+            pointer-events: all;
+        }
+
+        .page.hidden {
+            display: none;
+        }
+
+        /* ---------- FORWARD TRANSITIONS ---------- */
+        .page-transition-flip {
+            transform: rotateY(90deg) scale(0.8);
+            opacity: 0;
+            transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.7s ease;
+        }
+        .page-transition-flip.active {
+            transform: rotateY(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .page-transition-zoom {
+            transform: scale(0.5) rotate(5deg);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.6s ease;
+        }
+        .page-transition-zoom.active {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        .page-transition-slide {
+            transform: translateX(100px) scale(0.95);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.6s ease;
+        }
+        .page-transition-slide.active {
+            transform: translateX(0) scale(1);
+            opacity: 1;
+        }
+
+        /* ---------- BACKWARD TRANSITIONS (REVERSE) ---------- */
+        .page-transition-back-flip {
+            transform: rotateY(-90deg) scale(0.8);
+            opacity: 0;
+            transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.7s ease;
+        }
+        .page-transition-back-flip.active {
+            transform: rotateY(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .page-transition-back-zoom {
+            transform: scale(0.5) rotate(-5deg);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.6s ease;
+        }
+        .page-transition-back-zoom.active {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        .page-transition-back-slide {
+            transform: translateX(-100px) scale(0.95);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.6s ease;
+        }
+        .page-transition-back-slide.active {
+            transform: translateX(0) scale(1);
+            opacity: 1;
+        }
+
+        /* ---------- MODAL / POPUP (common) ---------- */
+        .modal {
+            position: relative;
+            background: rgba(10, 20, 50, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 32px;
+            padding: 50px 45px 45px;
+            max-width: 560px;
+            width: 92%;
+            text-align: center;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), 0 0 60px rgba(0, 100, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: modalPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            z-index: 2;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.7) translateY(40px) rotateX(-10deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0) rotateX(0deg);
+            }
+        }
+
+        /* ---------- BACK ARROW (common) ---------- */
+        .back-arrow {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-arrow:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1) rotate(-5deg);
+            box-shadow: 0 0 30px rgba(100, 200, 255, 0.3);
+        }
+
+        .back-arrow:active {
+            transform: scale(0.9);
+        }
+
+        /* ---------- TYPOGRAPHY ---------- */
+        .rakhi-icon {
+            font-size: 4.8rem;
+            margin-bottom: 8px;
+            display: block;
+            animation: bounce 2s infinite ease-in-out;
+            filter: drop-shadow(0 0 30px rgba(100, 200, 255, 0.4));
+        }
+
+        @keyframes bounce {
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-16px) scale(1.05);
+            }
+        }
+
+        .modal h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b8a, #ff3366, #ff6b8a);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s ease-in-out infinite;
+            margin-bottom: 6px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 40px rgba(255, 50, 100, 0.15);
+        }
+
+        @keyframes shimmer {
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .modal h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+            text-shadow: 0 0 40px rgba(100, 200, 255, 0.3);
+        }
+
+        .modal .sub-text {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin: 8px 0 18px;
+            line-height: 1.6;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 12px rgba(255,255,255,0.1);
+            opacity: 0.92;
+        }
+
+        .modal .highlight {
+            color: #4fc3f7;
+            font-weight: 600;
+            text-shadow: 0 0 20px rgba(79, 195, 247, 0.2);
+        }
+
+        .modal .special-text {
+            font-size: 1.4rem;
+            color: #4fc3f7;
+            font-weight: 600;
+            margin: 6px 0 22px;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 30px rgba(79, 195, 247, 0.3);
+        }
+
+        .page3-title {
+            color: #ffd700;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+
+        /* ---------- SUMMARY PAGE ---------- */
+        .summary-box {
+            background: rgba(0, 20, 60, 0.4);
+            border-radius: 20px;
+            padding: 20px 16px;
+            margin: 12px 0 18px;
+            border: 1px solid rgba(100, 200, 255, 0.15);
+            text-align: left;
+            font-size: 1.1rem;
+            line-height: 2.2;
+            color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 30px rgba(0, 100, 255, 0.05);
+        }
+
+        .summary-box span {
+            color: #4fc3f7;
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .share-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .btn-share {
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+            -webkit-tap-highlight-color: transparent;
+            flex: 0 1 auto;
+            min-width: 140px;
+        }
+
+        .btn-share-whatsapp {
+            background: #25D366;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-share-whatsapp:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 0 50px rgba(37, 211, 102, 0.5);
+        }
+
+        .btn-share-copy {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: #fff;
+            box-shadow: 0 0 30px rgba(108, 92, 231, 0.3);
+        }
+
+        .btn-share-copy:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 0 50px rgba(108, 92, 231, 0.5);
+        }
+
+        .btn-share:active {
+            transform: scale(0.95);
+        }
+
+        /* ---------- BUTTONS ---------- */
+        .btn {
+            display: inline-block;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .btn:hover::after {
+            opacity: 1;
+        }
+
+        .btn-surprise {
+            background: linear-gradient(135deg, #e9405f, #ff6b8a);
+            color: #fff;
+            font-size: 1.3rem;
+            padding: 16px 50px;
+            box-shadow: 0 8px 35px rgba(233, 64, 95, 0.5);
+            margin-top: 8px;
+            animation: pulseGlow 2.5s ease-in-out infinite;
+        }
+
+        .btn-birthday {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            font-size: 1.2rem;
+            padding: 16px 40px;
+            box-shadow: 0 8px 35px rgba(247, 151, 30, 0.5);
+            margin-top: 8px;
+            animation: pulseGold 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%,
+            100% {
+                box-shadow: 0 8px 35px rgba(233, 64, 95, 0.5);
+            }
+            50% {
+                box-shadow: 0 8px 60px rgba(233, 64, 95, 0.8);
+            }
+        }
+
+        @keyframes pulseGold {
+            0%,
+            100% {
+                box-shadow: 0 8px 35px rgba(247, 151, 30, 0.5);
+            }
+            50% {
+                box-shadow: 0 8px 60px rgba(247, 151, 30, 0.8);
+            }
+        }
+
+        .btn-surprise:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 14px 50px rgba(233, 64, 95, 0.7);
+        }
+
+        .btn-birthday:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 14px 50px rgba(247, 151, 30, 0.7);
+        }
+
+        /* ---------- BUTTON GROUP (for cuisine, place, etc.) ---------- */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 16px;
+            padding: 4px 0;
+        }
+
+        .btn-group .btn {
+            flex: 0 1 auto;
+            min-width: 100px;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 5;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-cuisine {
+            background: linear-gradient(135deg, #0a2540, #1a3a5c);
+            color: #fff;
+            box-shadow: 0 6px 25px rgba(0, 50, 100, 0.3);
+            border-color: rgba(100, 200, 255, 0.15);
+        }
+        .btn-cuisine:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 100, 255, 0.4);
+            border-color: #4fc3f7;
+        }
+
+        .btn-place {
+            background: linear-gradient(135deg, #0a2a3a, #1a4a6a);
+            color: #fff;
+            box-shadow: 0 6px 25px rgba(0, 200, 200, 0.2);
+            border-color: rgba(0, 200, 200, 0.15);
+        }
+        .btn-place:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 200, 200, 0.3);
+            border-color: #4dd0e1;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            font-size: 1.1rem;
+            padding: 14px 48px;
+            box-shadow: 0 6px 25px rgba(253, 203, 110, 0.4);
+            margin-top: 12px;
+        }
+        .btn-next:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(253, 203, 110, 0.6);
+        }
+
+        /* ---------- CALENDAR (existing) ---------- */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 18px;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 6px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .calendar-day {
+            padding: 12px 4px;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: default;
+            min-height: 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.3px;
+            animation: fadeInDay 0.4s ease forwards;
+            opacity: 0;
+            transform: translateY(8px);
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1.2;
+        }
+
+        .calendar-day .day-number {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .calendar-day .month-name {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .calendar-day:nth-child(1) { animation-delay: 0.04s; }
+        .calendar-day:nth-child(2) { animation-delay: 0.08s; }
+        .calendar-day:nth-child(3) { animation-delay: 0.12s; }
+        .calendar-day:nth-child(4) { animation-delay: 0.16s; }
+        .calendar-day:nth-child(5) { animation-delay: 0.20s; }
+        .calendar-day:nth-child(6) { animation-delay: 0.24s; }
+        .calendar-day:nth-child(7) { animation-delay: 0.28s; }
+        .calendar-day:nth-child(8) { animation-delay: 0.32s; }
+        .calendar-day:nth-child(9) { animation-delay: 0.36s; }
+        .calendar-day:nth-child(10) { animation-delay: 0.40s; }
+        .calendar-day:nth-child(11) { animation-delay: 0.44s; }
+        .calendar-day:nth-child(12) { animation-delay: 0.48s; }
+        .calendar-day:nth-child(13) { animation-delay: 0.52s; }
+        .calendar-day:nth-child(14) { animation-delay: 0.56s; }
+        .calendar-day:nth-child(15) { animation-delay: 0.60s; }
+        .calendar-day:nth-child(16) { animation-delay: 0.64s; }
+        .calendar-day:nth-child(17) { animation-delay: 0.68s; }
+        .calendar-day:nth-child(18) { animation-delay: 0.72s; }
+        .calendar-day:nth-child(19) { animation-delay: 0.76s; }
+        .calendar-day:nth-child(20) { animation-delay: 0.80s; }
+        .calendar-day:nth-child(21) { animation-delay: 0.84s; }
+        .calendar-day:nth-child(22) { animation-delay: 0.88s; }
+        .calendar-day:nth-child(23) { animation-delay: 0.92s; }
+        .calendar-day:nth-child(24) { animation-delay: 0.96s; }
+        .calendar-day:nth-child(25) { animation-delay: 1.00s; }
+        .calendar-day:nth-child(26) { animation-delay: 1.04s; }
+        .calendar-day:nth-child(27) { animation-delay: 1.08s; }
+        .calendar-day:nth-child(28) { animation-delay: 1.12s; }
+        .calendar-day:nth-child(29) { animation-delay: 1.16s; }
+        .calendar-day:nth-child(30) { animation-delay: 1.20s; }
+
+        @keyframes fadeInDay {
+            0% {
+                opacity: 0;
+                transform: translateY(8px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .calendar-day.sunday {
+            background: rgba(79, 195, 247, 0.10);
+            color: #4fc3f7;
+            border-color: rgba(79, 195, 247, 0.20);
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(79, 195, 247, 0.05);
+            text-shadow: 0 0 20px rgba(79, 195, 247, 0.1);
+        }
+
+        .calendar-day.sunday:hover {
+            background: rgba(79, 195, 247, 0.22);
+            transform: scale(1.08) translateY(-2px);
+            box-shadow: 0 0 40px rgba(79, 195, 247, 0.25);
+            border-color: #4fc3f7;
+        }
+
+        .calendar-day.sunday:active {
+            transform: scale(0.95);
+        }
+
+        .calendar-day.sunday::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(79, 195, 247, 0.10) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .calendar-day.sunday:hover::before {
+            opacity: 1;
+        }
+
+        .calendar-day.other-day {
+            background: rgba(255, 255, 255, 0.02);
+            color: rgba(255, 255, 255, 0.30);
+            border-color: rgba(255, 255, 255, 0.03);
+            cursor: not-allowed;
+            opacity: 0.6;
+            filter: grayscale(0.2);
+        }
+
+        .calendar-day.other-day:hover {
+            transform: none;
+            box-shadow: none;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .calendar-day.other-day:active {
+            transform: none;
+        }
+
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 6px;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 4px 6px;
+        }
+
+        .calendar-header span {
+            padding: 8px 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.35);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* ---------- TIME SLOTS ---------- */
+        .time-slots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 14px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .time-slot {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 70px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .time-slot:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.05);
+            border-color: #4fc3f7;
+        }
+
+        .time-slot.selected {
+            background: rgba(79, 195, 247, 0.20);
+            border-color: #4fc3f7;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(79, 195, 247, 0.15);
+        }
+
+        .time-slot:active {
+            transform: scale(0.95);
+        }
+
+        /* ---------- CONFETTI BURST ---------- */
+        .confetti-burst {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 12px;
+            height: 18px;
+            border-radius: 3px;
+            animation: confettiFall 1.8s ease-out forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg) scale(0.3);
+            }
+        }
+
+        /* ---------- TOAST / MESSAGE POPUP ---------- */
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 10, 30, 0.9);
+            color: #4fc3f7;
+            padding: 16px 36px;
+            border-radius: 60px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            z-index: 999;
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(79, 195, 247, 0.2);
+            animation: modalPop 0.5s ease forwards;
+            text-align: center;
+            max-width: 92%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(79, 195, 247, 0.05);
+            pointer-events: none;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* ---------- PAGE 3 – IMAGE BOX (with image + animated text) ---------- */
+        .page3-modal {
+            padding: 30px 25px 35px;
+            max-width: 500px;
+        }
+
+        .image-box {
+            margin-top: 15px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 60px rgba(79, 195, 247, 0.05);
+            border: 2px solid rgba(79, 195, 247, 0.15);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .image-box img {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-height: 60vh;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .image-box:hover img {
+            transform: scale(1.03);
+        }
+
+        .money-text-animation {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            padding: 20px 15px;
+            border-radius: 0 0 20px 20px;
+            font-family: 'Poppins', sans-serif;
+            animation: moneyGlow 2s ease-in-out infinite alternate, scalePulse 1.5s ease-in-out infinite;
+            line-height: 1.4;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            width: 100%;
+            letter-spacing: 1px;
+            box-sizing: border-box;
+        }
+
+        @keyframes moneyGlow {
+            0% {
+                text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            }
+            100% {
+                text-shadow: 0 0 60px rgba(255, 215, 0, 0.8), 0 0 100px rgba(255, 100, 0, 0.4);
+            }
+        }
+
+        @keyframes scalePulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 640px) {
+            .modal {
+                padding: 32px 18px 28px;
+                border-radius: 24px;
+                max-width: 96%;
+            }
+            .modal h1 {
+                font-size: 2.2rem;
+            }
+            .modal h2 {
+                font-size: 1.7rem;
+            }
+            .modal .sub-text {
+                font-size: 1rem;
+            }
+            .modal .special-text {
+                font-size: 1.1rem;
+            }
+            .btn {
+                padding: 11px 22px;
+                font-size: 0.9rem;
+            }
+            .btn-surprise {
+                padding: 14px 32px;
+                font-size: 1rem;
+            }
+            .btn-group .btn {
+                min-width: 70px;
+                padding: 9px 14px;
+                font-size: 0.8rem;
+            }
+            .back-arrow {
+                width: 38px;
+                height: 38px;
+                font-size: 1.3rem;
+                top: 12px;
+                left: 14px;
+            }
+            .rakhi-icon {
+                font-size: 3.6rem;
+            }
+            .toast-msg {
+                font-size: 0.95rem;
+                padding: 12px 22px;
+                bottom: 20px;
+            }
+            .calendar-day {
+                font-size: 0.7rem;
+                padding: 8px 2px;
+                min-height: 38px;
+            }
+            .calendar-day .day-number {
+                font-size: 0.9rem;
+            }
+            .calendar-day .month-name {
+                font-size: 0.45rem;
+            }
+            .calendar-header span {
+                font-size: 0.55rem;
+            }
+            .time-slot {
+                font-size: 0.75rem;
+                padding: 8px 14px;
+                min-width: 60px;
+            }
+            .btn-next {
+                font-size: 0.95rem;
+                padding: 12px 32px;
+            }
+            .page3-title {
+                font-size: 1.1rem;
+            }
+            .summary-box {
+                font-size: 0.85rem;
+                padding: 14px 12px;
+            }
+            .btn-share {
+                padding: 10px 20px;
+                font-size: 0.85rem;
+                min-width: 110px;
+            }
+            .money-text-animation {
+                font-size: 1.4rem;
+                padding: 14px 12px;
+            }
+            .glow-heading {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .modal {
+                padding: 20px 12px 22px;
+                border-radius: 20px;
+            }
+            .modal h1 {
+                font-size: 1.8rem;
+            }
+            .modal h2 {
+                font-size: 1.4rem;
+            }
+            .btn-group .btn {
+                min-width: 60px;
+                padding: 7px 10px;
+                font-size: 0.7rem;
+            }
+            .back-arrow {
+                width: 34px;
+                height: 34px;
+                font-size: 1.1rem;
+                top: 10px;
+                left: 12px;
+            }
+            .calendar-day {
+                font-size: 0.6rem;
+                padding: 6px 2px;
+                min-height: 32px;
+            }
+            .calendar-day .day-number {
+                font-size: 0.8rem;
+            }
+            .calendar-day .month-name {
+                font-size: 0.4rem;
+            }
+            .calendar-header span {
+                font-size: 0.5rem;
+            }
+            .time-slot {
+                font-size: 0.65rem;
+                padding: 6px 10px;
+                min-width: 50px;
+            }
+            .btn-next {
+                font-size: 0.85rem;
+                padding: 10px 24px;
+            }
+            .toast-msg {
+                font-size: 0.85rem;
+                padding: 10px 16px;
+            }
+            .summary-box {
+                font-size: 0.8rem;
+                padding: 10px 10px;
+                line-height: 1.8;
+            }
+            .btn-share {
+                padding: 8px 16px;
+                font-size: 0.75rem;
+                min-width: 90px;
+            }
+            .money-text-animation {
+                font-size: 1.2rem;
+                padding: 10px 10px;
+            }
+            .glow-heading {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* ---------- SCROLLBAR ---------- */
+        .modal::-webkit-scrollbar {
+            width: 4px;
+        }
+        .modal::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .modal::-webkit-scrollbar-thumb {
+            background: rgba(79, 195, 247, 0.3);
+            border-radius: 10px;
+        }
+
+        /* ---------- UTILITY ---------- */
+        .hidden {
+            display: none !important;
+        }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mt-12 {
+            margin-top: 12px;
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+
+        /* ---------- RESPONSIVE FLOATING ITEMS ---------- */
+        .float-item {
+            font-size: clamp(1.2rem, 3vw, 2.8rem);
+        }
+
+        /* ---------- BUTTON GROUP (for Party & Money on Page 2) ---------- */
+        .btn-group-p2 {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+            margin-top: 18px;
+            position: relative;
+            min-height: 70px;
+            padding: 6px 0;
+            align-items: center;
+        }
+
+        .btn-group-p2 .btn {
+            flex: 0 1 auto;
+            min-width: 110px;
+            padding: 13px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 5;
+            will-change: transform;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-party-p2 {
+            background: linear-gradient(135deg, #0a2a5c, #1a4a8a);
+            color: #fff;
+            box-shadow: 0 6px 25px rgba(0, 100, 255, 0.3);
+            border-color: rgba(79, 195, 247, 0.15);
+        }
+
+        .btn-party-p2:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 150, 255, 0.5);
+            border-color: #4fc3f7;
+        }
+
+        .btn-money-p2 {
+            background: linear-gradient(135deg, #2a1a4a, #4a2a7a);
+            color: #fff;
+            box-shadow: 0 6px 25px rgba(150, 0, 255, 0.3);
+            border-color: rgba(200, 100, 255, 0.15);
+        }
+
+        .btn-money-p2:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(180, 0, 255, 0.5);
+            border-color: #ce93d8;
+        }
+
+        /* ---------- "Kuch nahi" – absolute inside modal ---------- */
+        .btn-nahi {
+            background: linear-gradient(135deg, #4a0a0a, #7a1a1a);
+            color: #fff;
+            box-shadow: 0 6px 25px rgba(214, 48, 49, 0.4);
+            transition: all 0.15s ease;
+            cursor: pointer;
+            z-index: 1000 !important;
+            position: absolute;
+            left: 50%;
+            top: 80%;
+            transform: translate(-50%, -50%);
+            min-width: 110px;
+            padding: 13px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 100, 100, 0.2);
+            text-transform: uppercase;
+            -webkit-tap-highlight-color: transparent;
+            will-change: left, top;
+            animation: glowRed 2s infinite alternate;
+        }
+
+        @keyframes glowRed {
+            0% {
+                box-shadow: 0 0 20px rgba(214, 48, 49, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 40px rgba(214, 48, 49, 0.7);
+            }
+        }
+
+        .btn-nahi:hover {
+            transform: scale(1.04);
+            box-shadow: 0 10px 35px rgba(214, 48, 49, 0.6);
+        }
+
+        /* ---------- SHAKE ANIMATION ---------- */
+        .shake {
+            animation: shakeAnim 0.5s ease;
+        }
+
+        @keyframes shakeAnim {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            20% {
+                transform: translateX(-12px) rotate(-3deg);
+            }
+            40% {
+                transform: translateX(12px) rotate(3deg);
+            }
+            60% {
+                transform: translateX(-8px) rotate(-2deg);
+            }
+            80% {
+                transform: translateX(8px) rotate(2deg);
+            }
+        }
+
+        /* ---------- WEBHOOK STATUS (REMOVED - HIDDEN) ---------- */
+        .webhook-status {
+            display: none !important;
+        }
+
+        /* ---------- BIRTHDAY PAGE (Page 9) STYLES ---------- */
+        #page9 .modal {
+            background: rgba(10, 20, 50, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            max-width: 650px;
+            padding: 30px 25px 35px;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        #page9 h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b8a, #ff3366, #ff6b8a);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s ease-in-out infinite;
+            margin-bottom: 8px;
+            text-shadow: 0 0 40px rgba(255, 50, 100, 0.15);
+        }
+
+        #page9 .subtext {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+            animation: fadeIn 3s ease-in-out infinite alternate;
+        }
+
+        #page9 .photos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        #page9 .glowing-image {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 0 20px #00e676, 0 0 30px #00e676, 0 0 40px #00e676;
+            animation: glow 2s ease-in-out infinite alternate;
+            transition: transform 0.3s;
+        }
+
+        #page9 .glowing-image:hover {
+            transform: scale(1.05);
+        }
+
+        #page9 .special-message {
+            margin: 20px auto;
+            max-width: 100%;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            color: #ffcc80;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: left;
+        }
+
+        #page9 .special-message p {
+            margin-bottom: 12px;
+        }
+
+        #page9 .image-carousel {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #page9 .carousel-track {
+            display: flex;
+            gap: 10px;
+            animation: scrollHorizontal 30s linear infinite;
+            width: max-content;
+        }
+
+        #page9 .carousel-track img {
+            width: 160px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes scrollHorizontal {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Puzzle Styles (inside Page 9) */
+        .puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            max-width: 400px;
+            margin: 20px auto;
+            aspect-ratio: 1 / 1;
+            background: rgba(0,0,0,0.3);
+            padding: 6px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(79,195,247,0.1);
+        }
+
+        .puzzle-piece {
+            background-size: 300% 300%;
+            border-radius: 6px;
+            cursor: grab;
+            transition: transform 0.15s, box-shadow 0.15s;
+            position: relative;
+            background-image: var(--puzzle-image);
+        }
+
+        .puzzle-piece:active {
+            cursor: grabbing;
+        }
+
+        .puzzle-piece.dragging {
+            opacity: 0.7;
+            transform: scale(0.95);
+            box-shadow: 0 0 20px rgba(255,215,0,0.6);
+        }
+
+        .puzzle-piece.correct {
+            box-shadow: 0 0 15px rgba(46, 213, 115, 0.6);
+            border: 2px solid #2ecc71;
+        }
+
+        .puzzle-message {
+            font-size: 1.2rem;
+            color: #ffd700;
+            margin-top: 10px;
+            min-height: 40px;
+        }
+
+        .btn-shuffle {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #1a1a2e;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(247,151,30,0.4);
+        }
+
+        .btn-shuffle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(247,151,30,0.6);
+        }
+
+        /* Puzzle Call-to-Action Line */
+        .puzzle-cta {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5), 0 0 40px rgba(255,215,0,0.2);
+            margin: 5px 0 10px;
+            animation: pulseCta 2s ease-in-out infinite;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes pulseCta {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        /* ---------- PAGE 10 – VIDEO PAGE ---------- */
+        #page10 .modal {
+            background: rgba(10, 20, 50, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            max-width: 650px;
+            padding: 30px 25px 35px;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        #page10 video {
+            width: 100%;
+            max-height: 70vh;
+            border-radius: 20px;
+            box-shadow: 0 0 60px rgba(255,215,0,0.3);
+            border: 2px solid rgba(255,215,0,0.2);
+            background: #000;
+        }
+
+        #page10 .video-label {
+            color: #ffd700;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 15px;
+            text-shadow: 0 0 30px rgba(255,215,0,0.4);
+        }
+
+        /* Responsive for Page 10 */
+        @media (max-width: 640px) {
+            #page10 .modal {
+                padding: 20px 15px;
+            }
+            #page10 video {
+                max-height: 60vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== BACKGROUND MUSIC ====== -->
+    <!-- ऑडियो एलिमेंट body के अंदर सबसे ऊपर – पेज बदलने पर भी बजता रहेगा -->
+
+    <!-- ====== BACKGROUND CANVAS ====== -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- ====== FLOATING ELEMENTS (CSS) ====== -->
+    <div class="floating-elements" id="floatingElements"></div>
+
+    <!-- ====== CONFETTI BURST CONTAINER ====== -->
+    <div class="confetti-burst" id="confettiBurst"></div>
+
+    <!-- ========================================================== -->
+    <!-- ====== PAGE 1 – RAKHI WISH (दो बटन) ====== -->
+    <!-- ========================================================== -->
+    <div class="page active" id="page1">
+        <div class="modal">
+            <span class="rakhi-icon">🎀</span>
+            <h1>Happy Raksha Bandhan!</h1>
+            <p class="sub-text" style="font-size: 1.3rem; line-height: 1.8;">
+                🎉 राखी का यह पावन त्योहार,<br />
+                <span class="highlight">भाई-बहन</span> के अटूट प्यार का प्रतीक है।<br />
+                हर बंधन खास हो, हर रिश्ता मज़बूत हो।<br />
+                <span style="color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.4);">
+                इस राखी पर दुआएँ आपके साथ हों,<br />
+                और आपकी ज़िंदगी खुशियों से भरी हो। ✨
+                </span>
+            </p>
+            <p class="sub-text" style="font-size:0.95rem; opacity:0.7; margin-top:-6px;">
+                ❤️ बहुत-बहुत शुभकामनाएँ ❤️
+            </p>
+            <button class="btn btn-surprise" id="surpriseBtn" style="margin-right:10px;">
+                🎁 Surprise
+            </button>
+            <button class="btn btn-birthday" id="birthdaySurpriseBtn">
+                🎂 Birthday Surprise
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- ====== PAGE 2 – SURPRISE + THREE BUTTONS (Back Arrow) ====== -->
+    <!-- ========================================================== -->
+    <div class="page" id="page2">
+        <div class="modal" id="modal2">
+            <div class="back-arrow" id="backArrowFromPage2">←</div>
+
+            <h2 class="glow-heading" style="text-shadow: 0 0 30px rgba(255,215,0,0.6), 0 0 60px rgba(255,215,0,0.3); opacity:0.9;">
+                🎊 CONGRATULATIONS! 🎊
+            </h2>
+            <p class="special-text" style="font-size: 1.6rem; line-height: 1.4; text-shadow: 0 0 25px rgba(79, 195, 247, 0.5); opacity:0.88;">
+                Aap special <span style="color: #ffd700; text-shadow: 0 0 30px rgba(79, 195, 247, 0.5);">chune</span> gaye hain...<br />
+                <span style="font-size: 1.2rem; color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.7), 0 0 60px rgba(255,200,0,0.3); opacity:0.9;">
+                    Apne bhai ko treat dene ke liye! 😂🍕
+                </span>
+            </p>
+            <p style="color:rgba(255,255,255,0.7); font-size:0.95rem; margin-bottom:6px; text-shadow: 0 0 10px rgba(255,255,255,0.1); opacity:0.85;">
+                (HAAN HAAN, AAP HI KO PARTY DENI HAI! 🥳)<br />
+                CHUNEN AB APNA OFFER 👇
+            </p>
+
+            <div class="btn-group-p2" id="btnGroup">
+                <button class="btn btn-party-p2" data-choice="party">🎉 Party</button>
+                <button class="btn btn-money-p2" data-choice="money">💰 Money</button>
+            </div>
+
+            <button class="btn btn-nahi" id="nahiBtn" data-choice="nahi">🚫 Kuch nahi</button>
+
+            <p style="color:rgba(255,255,255,0.4); font-size:0.7rem; margin-top:18px; letter-spacing:0.3px;">
+                💡 हिंट: "Kuch nahi" वाला बटन पकड़ में नहीं आएगा 😉
+            </p>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- ====== PAGE 3 – MONEY SPECIAL ====== -->
+    <!-- ========================================================== -->
+    <div class="page" id="page3">
+        <div class="modal page3-modal">
+            <div class="back-arrow" id="backArrowFromMoney">←</div>
+            <div class="image-box">
+                <img src="image/Bond1.png" alt="Money Special" />
+            </div>
+            <div class="money-text-animation">sakal dekhi hai aayi badi mujhe paise dene wali</div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- ====== PAGE 4 – CUISINE SELECTION ====== -->
+    <!-- ========================================================== -->
+    <div class="page" id="page4">
+        <div class="modal">
+            <div class="back-arrow" id="backArrowFromCuisine">←</div>
+            <h2>🍽️ What whould you like to eat?</h2>
+            <p style="color:rgba(255,255,255,0.5); font-size:0.9rem; margin-top:-4px; margin-bottom:8px;">
+                Choose your preference 👇
+            </p>
+            <div class="btn-group">
+                <button class="btn btn-cuisine" data-cuisine="chinese">🇨🇳 Chinese</button>
+                <button class="btn btn-cuisine" data-cuisine="japanese">🇯🇵 Japanese</button>
+                <button class="btn btn-cuisine" data-cuisine="south-indian">🇮🇳 South Indian</button>
+                <button class="btn btn-cuisine" data-cuisine="italian">🇮🇹 Italian</button>
+                <button class="btn btn-cuisine" data-cuisine="punjabi">🇮🇳 Punjabi</button>
+                <button class="btn btn-cuisine" data-cuisine="gujarati">🇮🇳 Gujarati</button>
+                <button class="btn btn-cuisine" data-cuisine="maharashtrian">🇮🇳 Maharashtrian</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- ====== PAGE 5 – CALENDAR ====== -->
+    <!-- ========================================================== -->
+    <div class="page" id="page5">
+        <div class="modal">
+            <div class="back-arrow" id="backArrowFromCalendar">←</div>
+            <h2 class="glow-heading" style="font-size: 1.8rem; color: #4fc3f7; text-shadow: 0 0 30px rgba(79,195,247,0.5);">
+                📅 Fix Date for Party
+            </h2>
+            <div class="calendar-header" id="calendarHeader">
+                <span>SUN</span>
+                <span>MON</span>
+                <span>TUE</span>
+                <span>WED</span>
+                <span>THU</span>
+                <span>FRI</span>
+                <span>SAT</span>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- ====== PAGE 6 – TIME SLOTS ====== -->
+    <!-- ========================================================== -->
+    <div class="page" id="page6">
+        <div class="modal">
+            <div class="back-arrow" id="backArrowFromTime">←</div>
+            <h2>🕐 Select Time</h2>
+            <p style="color:rgba(255,255,255,0.5); font-size:0.9rem; margin-top:-4px;">
+                Click on your preferred time
+            </p>
+            <div class="time-slots" id="timeSlots"></div>
+            <button class="btn btn-next" id="nextBtn">Next ➜</button>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- ====== PAGE 7 – PLACE SELECTION ====== -->
+    <!-- ========================================================== -->
+    <div class="page" id="page7">
+        <div class="modal">
+            <div class="back-arrow" id="backArrowFromPlace">←</div>
+            <h2>📍 Select Place</h2>
+            <div class="btn-group">
+                <button class="btn btn-place" data-place="surat">Surat</button>
+                <button class="btn btn-place" data-place="mumbai">Mumbai</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- ====== PAGE 8 – SUMMARY & SHARE ====== -->
+    <!-- ========================================================== -->
+    <div class="page" id="page8">
+        <div class="modal">
+            <div class="back-arrow" id="backArrowFromSummary">←</div>
+            <h2 class="glow-heading" style="font-size: 2rem; color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.6);">
+                🎉 AAPKI PARTY KI BOOKING HO GAYI HAI!
+            </h2>
+            <p style="color:rgba(255,255,255,0.6); font-size:0.95rem; margin-top:-4px;">
+                Here is your booking summary
+            </p>
+            <div class="summary-box" id="summaryBox">
+                <span>🍽️ Cuisine:</span> <span id="summaryCuisine">-</span><br />
+                <span>📅 Date:</span> <span id="summaryDate">-</span><br />
+                <span>🕐 Time:</span> <span id="summaryTime">-</span><br />
+                <span>📍 Location:</span> <span id="summaryPlace">-</span>
+            </div>
+
+            <div class="share-buttons">
+                <button class="btn btn-share btn-share-whatsapp" id="shareWhatsapp">📤 WhatsApp</button>
+                <button class="btn btn-share btn-share-copy" id="shareCopy">📋 Copy</button>
+            </div>
+            <p style="color:rgba(255,255,255,0.2); font-size:0.6rem; margin-top:12px;">
+                Share on WhatsApp or copy message
+            </p>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- ====== PAGE 9 – BIRTHDAY SURPRISE (WITH PUZZLE) ====== -->
+    <!-- ========================================================== -->
+    <div class="page" id="page9">
+        <div class="modal">
+            <div class="back-arrow" id="backArrowFromBirthday">←</div>
+
+            <h1>🎉 Happy Birthday, [Name] 🎂</h1>
+            <p class="subtext">Wishing you a day filled with magic and joy! ✨</p>
+
+            <!-- Animated Memory Section -->
+            <div class="photos">
+                <img src="https://picsum.photos/seed/birthday1/200/200" alt="Memory 1" class="glowing-image">
+                <img src="https://picsum.photos/seed/birthday2/200/200" alt="Memory 2" class="glowing-image">
+                <img src="https://picsum.photos/seed/birthday3/200/200" alt="Memory 3" class="glowing-image">
+            </div>
+
+            <!-- Special Message -->
+            <div class="special-message">
+                <p>
+                    "Happy Birthday, my dearest akka! You are not just my sister but my first friend, my constant guide, and my biggest supporter. 
+                    On this special day, I want you to know how much you mean to me. Thank you for all the love, care, and endless patience you’ve 
+                    showered upon me.
+                </p>
+                <p>
+                    May this year bring you boundless happiness, success, and health. May all your dreams come true, and may your heart always overflow 
+                    with joy. You deserve the very best in life, and I pray that every step you take is filled with blessings and love.
+                </p>
+                <p>
+                    Thank you for being the wonderful person that you are. I am so lucky to have you in my life. Have an amazing day filled with laughter, 
+                    surprises, and all the things that make you happiest. Love you forever, akka!"
+                </p>
+                <p style="text-align:center;">WISHES BY [NAME]</p>
+            </div>
+
+            <!-- Image Carousel (Footer) -->
+            <div class="image-carousel">
+                <div class="carousel-track">
+                    <img src="https://picsum.photos/seed/car1/160/200" alt="Image 1">
+                    <img src="https://picsum.photos/seed/car2/160/200" alt="Image 2">
+                    <img src="https://picsum.photos/seed/car3/160/200" alt="Image 3">
+                    <img src="https://picsum.photos/seed/car4/160/200" alt="Image 4">
+                    <img src="https://picsum.photos/seed/car5/160/200" alt="Image 5">
+                    <img src="https://picsum.photos/seed/car6/160/200" alt="Image 6">
+                    <!-- Duplicate for smooth loop -->
+                    <img src="https://picsum.photos/seed/car1/160/200" alt="Image 1">
+                    <img src="https://picsum.photos/seed/car2/160/200" alt="Image 2">
+                    <img src="https://picsum.photos/seed/car3/160/200" alt="Image 3">
+                    <img src="https://picsum.photos/seed/car4/160/200" alt="Image 4">
+                    <img src="https://picsum.photos/seed/car5/160/200" alt="Image 5">
+                    <img src="https://picsum.photos/seed/car6/160/200" alt="Image 6">
+                </div>
+            </div>
+
+            <p style="margin-top:20px; font-size:0.9rem; opacity:0.6;">Made with love by Friends and Families 💖</p>
+
+            <!-- ===== PUZZLE GAME ===== -->
+            <!-- CTA Line -->
+            <div class="puzzle-cta">🧩 Puzzle Solve Karo Aur Reward Dekho! 🎁</div>
+
+            <div class="puzzle-container" id="puzzleContainer"></div>
+            <div class="puzzle-message" id="puzzleMessage">Arrange the pieces to complete the picture!</div>
+            <button class="btn-shuffle" id="shuffleBtn">🔀 Shuffle</button>
+
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- ====== PAGE 10 – VIDEO REWARD (New Page) ====== -->
+    <!-- ========================================================== -->
+    <div class="page" id="page10">
+        <div class="modal">
+            <!-- Back Arrow to Page 9 -->
+            <div class="back-arrow" id="backArrowFromVideo">←</div>
+
+            <h2 style="color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.6);">
+                🎥 Congratulations! Here's Your Reward 🎥
+            </h2>
+            <div class="video-label">🎬 Surprise Video</div>
+            <video id="rewardVideo" controls autoplay>
+                <source src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p style="color:rgba(255,255,255,0.4); margin-top:15px; font-size:0.9rem;">
+                Enjoy your special moment! 🎉
+            </p>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- ====== JAVASCRIPT ====== -->
+    <!-- ========================================================== -->
+    <script>
+        // ================================================================
+        //  🔥 WEBHOOK URL
+        // ================================================================
+        const WEBHOOK_URL = "https://webhook.site/5650d952-f3fe-40af-aadf-2058809306c9";
+
+        // ================================================================
+        //  0.  BACKGROUND MUSIC
+        // ================================================================
+        const bgMusic = document.getElementById('bgMusic');
+        let musicStarted = false;
+
+        function startMusic() {
+            if (!musicStarted) {
+                bgMusic.play().then(() => {
+                    musicStarted = true;
+                    console.log('🎵 Background music started!');
+                }).catch((err) => {
+                    console.log('⚠️ Music autoplay blocked. Waiting for user interaction...');
+                });
+            }
+        }
+
+        document.addEventListener('click', startMusic);
+        document.addEventListener('touchstart', startMusic);
+
+        window.addEventListener('load', function() {
+            bgMusic.play().then(() => {
+                musicStarted = true;
+                console.log('🎵 Background music started on load!');
+            }).catch(() => {
+                console.log('⏳ Waiting for user interaction to start music...');
+            });
+        });
+
+        // ================================================================
+        //  1.  BACKGROUND – CANVAS PARTICLES
+        // ================================================================
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let w, h;
+
+        function resizeCanvas() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const particles = [];
+        const PARTICLE_COUNT = 180;
+
+        class Particle {
+            constructor() {
+                this.reset(true);
+            }
+            reset(init = false) {
+                this.x = Math.random() * w;
+                this.y = init ? Math.random() * h : -20;
+                this.size = Math.random() * 3.5 + 1.2;
+                this.speedY = Math.random() * 1.5 + 0.4;
+                this.speedX = (Math.random() - 0.5) * 0.8;
+                this.opacity = Math.random() * 0.5 + 0.2;
+                const hues = [340, 360, 45, 220, 280];
+                this.hue = hues[Math.floor(Math.random() * hues.length)];
+                this.sat = 80 + Math.random() * 20;
+                this.light = 60 + Math.random() * 30;
+                this.color = `hsla(${this.hue}, ${this.sat}%, ${this.light}%, `;
+                this.wobble = Math.random() * Math.PI * 2;
+                this.wobbleSpeed = Math.random() * 0.03 + 0.01;
+                this.wobbleAmp = Math.random() * 1.5 + 0.5;
+                this.glow = Math.random() * 20 + 10;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX + Math.sin(this.wobble) * this.wobbleAmp * 0.3;
+                this.wobble += this.wobbleSpeed;
+                if (this.y > h + 30) this.reset();
+                if (this.x < -30) this.x = w + 30;
+                if (this.x > w + 30) this.x = -30;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color + this.opacity + ')';
+                ctx.fill();
+                ctx.shadowColor = this.color + '0.3)';
+                ctx.shadowBlur = this.glow;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push(new Particle());
+        }
+
+        function drawBackground() {
+            const grad = ctx.createRadialGradient(
+                w * 0.5 + Math.sin(Date.now() * 0.0003) * 80,
+                h * 0.4 + Math.cos(Date.now() * 0.0004) * 60,
+                0,
+                w * 0.5,
+                h * 0.5,
+                Math.max(w, h) * 0.9
+            );
+            const t = Date.now() * 0.0001;
+            grad.addColorStop(0, `hsl(${220 + Math.sin(t) * 10}, 70%, 12%)`);
+            grad.addColorStop(0.5, `hsl(${230 + Math.cos(t * 0.7) * 8}, 60%, 8%)`);
+            grad.addColorStop(1, `hsl(${240 + Math.sin(t * 0.5) * 5}, 50%, 3%)`);
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, w, h);
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            for (let i = 0; i < 8; i++) {
+                const x = (Math.sin(Date.now() * 0.001 + i * 1.2) * 0.5 + 0.5) * w;
+                const y = (Math.cos(Date.now() * 0.0013 + i * 0.9) * 0.5 + 0.5) * h;
+                const r = 2 + Math.sin(Date.now() * 0.005 + i) * 1.2;
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(100,200,255,${0.12 + Math.sin(Date.now() * 0.004 + i) * 0.06})`;
+                ctx.shadowColor = 'rgba(100,200,255,0.15)';
+                ctx.shadowBlur = 20;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        function animateBg() {
+            drawBackground();
+            requestAnimationFrame(animateBg);
+        }
+        animateBg();
+
+        // ================================================================
+        //  2.  FLOATING ELEMENTS
+        // ================================================================
+        const emojis = ['🎀', '✨', '🌸', '💖', '🎉', '🌟', '🪄', '💫', '🌺', '🎊', '💝', '🌈', '🦋', '🎵', '💎', '🔮', '🎇'];
+        const container = document.getElementById('floatingElements');
+
+        for (let i = 0; i < 40; i++) {
+            const el = document.createElement('div');
+            el.className = 'float-item';
+            el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            el.style.left = Math.random() * 100 + '%';
+            el.style.fontSize = (Math.random() * 2.2 + 1.2) + 'rem';
+            el.style.animationDuration = (Math.random() * 22 + 14) + 's';
+            el.style.animationDelay = (Math.random() * 25) + 's';
+            el.style.opacity = Math.random() * 0.5 + 0.2;
+            el.style.filter = `drop-shadow(0 0 ${10 + Math.random()*20}px rgba(100,200,255,0.15))`;
+            container.appendChild(el);
+        }
+
+        // ================================================================
+        //  3.  COMMON FUNCTIONS
+        // ================================================================
+        function fireConfetti() {
+            const burst = document.getElementById('confettiBurst');
+            const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#ffd93d', '#6bcb77', '#ff8a5c', '#00d2d3', '#f368e0', '#4fc3f7'];
+            for (let i = 0; i < 100; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + '%';
+                piece.style.top = '-10%';
+                piece.style.width = (Math.random() * 10 + 5) + 'px';
+                piece.style.height = (Math.random() * 14 + 8) + 'px';
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                piece.style.animationDuration = (Math.random() * 1.8 + 0.8) + 's';
+                piece.style.animationDelay = (Math.random() * 0.8) + 's';
+                piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+                piece.style.boxShadow = `0 0 20px ${piece.style.background}`;
+                burst.appendChild(piece);
+                setTimeout(() => piece.remove(), 3000);
+            }
+        }
+
+        function showToast(text) {
+            const existing = document.querySelector('.toast-msg');
+            if (existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            toast.textContent = text;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.6s ease';
+                setTimeout(() => toast.remove(), 700);
+            }, 3000);
+        }
+
+        function navigateTo(page, transitionClass = 'page-transition-flip') {
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+                p.classList.remove('page-transition-flip', 'page-transition-zoom', 'page-transition-slide',
+                    'page-transition-back-flip', 'page-transition-back-zoom', 'page-transition-back-slide');
+            });
+            page.classList.remove('hidden');
+            page.classList.add(transitionClass);
+            void page.offsetWidth;
+            requestAnimationFrame(() => {
+                page.classList.add('active');
+            });
+        }
+
+        function navigateBack(targetPage, transitionClass = 'page-transition-back-flip') {
+            navigateTo(targetPage, transitionClass);
+        }
+
+        function sendToWebhook(data) {
+            if (!WEBHOOK_URL) {
+                console.warn('Webhook URL not set. Data not sent.');
+                return;
+            }
+            fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                })
+                .then(() => console.log('✅ Data silently sent to webhook:', data))
+                .catch(err => console.error('❌ Webhook error:', err));
+        }
+
+        // ================================================================
+        //  4.  PAGE NAVIGATION
+        // ================================================================
+        const page1 = document.getElementById('page1');
+        const page2 = document.getElementById('page2');
+        const page3 = document.getElementById('page3');
+        const page4 = document.getElementById('page4');
+        const page5 = document.getElementById('page5');
+        const page6 = document.getElementById('page6');
+        const page7 = document.getElementById('page7');
+        const page8 = document.getElementById('page8');
+        const page9 = document.getElementById('page9');
+        const page10 = document.getElementById('page10');
+
+        const surpriseBtn = document.getElementById('surpriseBtn');
+        const birthdayBtn = document.getElementById('birthdaySurpriseBtn');
+
+        function handleSurprise(e) {
+            if (e) e.preventDefault();
+            fireConfetti();
+            navigateTo(page2, 'page-transition-flip');
+            resetButtonPositions();
+            clickCounter = 0;
+        }
+
+        function handleBirthdaySurprise(e) {
+            if (e) e.preventDefault();
+            fireConfetti();
+            navigateTo(page9, 'page-transition-zoom');
+            setTimeout(initPuzzle, 100);
+        }
+
+        surpriseBtn.addEventListener('click', handleSurprise);
+        surpriseBtn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            handleSurprise(e);
+        }, { passive: false });
+
+        birthdayBtn.addEventListener('click', handleBirthdaySurprise);
+        birthdayBtn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            handleBirthdaySurprise(e);
+        }, { passive: false });
+
+        // All back arrows
+        document.getElementById('backArrowFromPage2').addEventListener('click', function() {
+            navigateBack(page1, 'page-transition-back-flip');
+        });
+        document.getElementById('backArrowFromPage2').addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            navigateBack(page1, 'page-transition-back-flip');
+        }, { passive: false });
+
+        document.getElementById('backArrowFromMoney').addEventListener('click', function() {
+            navigateBack(page2, 'page-transition-back-flip');
+        });
+        document.getElementById('backArrowFromMoney').addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            navigateBack(page2, 'page-transition-back-flip');
+        }, { passive: false });
+
+        document.getElementById('backArrowFromCuisine').addEventListener('click', function() {
+            navigateBack(page2, 'page-transition-back-flip');
+        });
+        document.getElementById('backArrowFromCuisine').addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            navigateBack(page2, 'page-transition-back-flip');
+        }, { passive: false });
+
+        document.getElementById('backArrowFromCalendar').addEventListener('click', function() {
+            navigateBack(page4, 'page-transition-back-slide');
+        });
+        document.getElementById('backArrowFromCalendar').addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            navigateBack(page4, 'page-transition-back-slide');
+        }, { passive: false });
+
+        document.getElementById('backArrowFromTime').addEventListener('click', function() {
+            navigateBack(page5, 'page-transition-back-zoom');
+        });
+        document.getElementById('backArrowFromTime').addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            navigateBack(page5, 'page-transition-back-zoom');
+        }, { passive: false });
+
+        document.getElementById('backArrowFromPlace').addEventListener('click', function() {
+            navigateBack(page6, 'page-transition-back-slide');
+        });
+        document.getElementById('backArrowFromPlace').addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            navigateBack(page6, 'page-transition-back-slide');
+        }, { passive: false });
+
+        document.getElementById('backArrowFromSummary').addEventListener('click', function() {
+            navigateBack(page7, 'page-transition-back-zoom');
+        });
+        document.getElementById('backArrowFromSummary').addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            navigateBack(page7, 'page-transition-back-zoom');
+        }, { passive: false });
+
+        document.getElementById('backArrowFromBirthday').addEventListener('click', function() {
+            navigateBack(page1, 'page-transition-back-zoom');
+        });
+        document.getElementById('backArrowFromBirthday').addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            navigateBack(page1, 'page-transition-back-zoom');
+        }, { passive: false });
+
+        // Back arrow from Video page (Page 10) to Page 9
+        document.getElementById('backArrowFromVideo').addEventListener('click', function() {
+            navigateBack(page9, 'page-transition-back-zoom');
+        });
+        document.getElementById('backArrowFromVideo').addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            navigateBack(page9, 'page-transition-back-zoom');
+        }, { passive: false });
+
+        // ================================================================
+        //  5.  PUZZLE GAME (Page 9) – with Fallback and Video Page Navigation
+        // ================================================================
+        let puzzlePieces = [];
+        let dragData = null;
+        let isPuzzleSolved = false;
+
+        function getPuzzleImage() {
+            if (typeof PUZZLE_IMAGE !== 'undefined' && PUZZLE_IMAGE && PUZZLE_IMAGE.trim() !== '') {
+                return PUZZLE_IMAGE;
+            }
+            return DEFAULT_PUZZLE_IMAGE;
+        }
+
+        function getVideoUrl() {
+            if (typeof VIDEO_URL !== 'undefined' && VIDEO_URL && VIDEO_URL.trim() !== '') {
+                return VIDEO_URL;
+            }
+            return DEFAULT_VIDEO_URL;
+        }
+
+        function initPuzzle() {
+            const container = document.getElementById('puzzleContainer');
+            const imgUrl = getPuzzleImage();
+            container.style.setProperty('--puzzle-image', `url('${imgUrl}')`);
+
+            const pieces = [];
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < 3; col++) {
+                    pieces.push({
+                        id: row * 3 + col,
+                        row: row,
+                        col: col,
+                        currentPos: row * 3 + col
+                    });
+                }
+            }
+            puzzlePieces = pieces;
+            isPuzzleSolved = false;
+            document.getElementById('puzzleMessage').textContent = 'Arrange the pieces to complete the picture!';
+            document.getElementById('puzzleMessage').style.color = '#ffd700';
+
+            shufflePieces();
+            renderPuzzle();
+        }
+
+        function shufflePieces() {
+            let positions = puzzlePieces.map(p => p.currentPos);
+            for (let i = positions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [positions[i], positions[j]] = [positions[j], positions[i]];
+            }
+            puzzlePieces.forEach((p, idx) => {
+                p.currentPos = positions[idx];
+            });
+        }
+
+        function renderPuzzle() {
+            const container = document.getElementById('puzzleContainer');
+            container.innerHTML = '';
+            const sorted = [...puzzlePieces].sort((a, b) => a.currentPos - b.currentPos);
+            sorted.forEach(piece => {
+                const div = document.createElement('div');
+                div.className = 'puzzle-piece';
+                div.dataset.id = piece.id;
+                div.dataset.row = piece.row;
+                div.dataset.col = piece.col;
+                const xPos = (piece.col * 33.33) + '%';
+                const yPos = (piece.row * 33.33) + '%';
+                div.style.backgroundPosition = xPos + ' ' + yPos;
+                if (piece.currentPos === piece.id) {
+                    div.classList.add('correct');
+                }
+                div.setAttribute('draggable', 'true');
+                div.addEventListener('dragstart', handleDragStart);
+                div.addEventListener('dragover', handleDragOver);
+                div.addEventListener('drop', handleDrop);
+                div.addEventListener('dragend', handleDragEnd);
+                // Touch events
+                div.addEventListener('touchstart', handleTouchStart, { passive: true });
+                div.addEventListener('touchmove', handleTouchMove, { passive: false });
+                div.addEventListener('touchend', handleTouchEnd, { passive: false });
+                container.appendChild(div);
+            });
+        }
+
+        function handleDragStart(e) {
+            const piece = e.target;
+            dragData = {
+                id: parseInt(piece.dataset.id),
+                row: parseInt(piece.dataset.row),
+                col: parseInt(piece.dataset.col)
+            };
+            piece.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', piece.dataset.id);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const target = e.target.closest('.puzzle-piece');
+            if (!target) return;
+            const targetId = parseInt(target.dataset.id);
+            if (dragData && dragData.id !== targetId) {
+                swapPieces(dragData.id, targetId);
+                renderPuzzle();
+                checkPuzzleComplete();
+            }
+            dragData = null;
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+            dragData = null;
+        }
+
+        let touchStartData = null;
+        let touchMoveData = null;
+
+        function handleTouchStart(e) {
+            const piece = e.target.closest('.puzzle-piece');
+            if (!piece) return;
+            const touch = e.touches[0];
+            touchStartData = {
+                id: parseInt(piece.dataset.id),
+                x: touch.clientX,
+                y: touch.clientY,
+                piece: piece
+            };
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!touchStartData) return;
+            const touch = e.touches[0];
+            touchMoveData = {
+                x: touch.clientX,
+                y: touch.clientY
+            };
+            const pieces = document.querySelectorAll('.puzzle-piece');
+            pieces.forEach(p => p.style.opacity = '1');
+            touchStartData.piece.style.opacity = '0.5';
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (target && target.closest('.puzzle-piece')) {
+                const targetPiece = target.closest('.puzzle-piece');
+                if (targetPiece !== touchStartData.piece) {
+                    targetPiece.style.boxShadow = '0 0 20px rgba(255,215,0,0.8)';
+                }
+            }
+        }
+
+        function handleTouchEnd(e) {
+            if (!touchStartData) return;
+            const touch = e.changedTouches[0];
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (target && target.closest('.puzzle-piece')) {
+                const targetPiece = target.closest('.puzzle-piece');
+                const targetId = parseInt(targetPiece.dataset.id);
+                if (targetId !== touchStartData.id) {
+                    swapPieces(touchStartData.id, targetId);
+                    renderPuzzle();
+                    checkPuzzleComplete();
+                }
+            }
+            touchStartData.piece.style.opacity = '1';
+            const pieces = document.querySelectorAll('.puzzle-piece');
+            pieces.forEach(p => {
+                p.style.boxShadow = '';
+                p.style.opacity = '1';
+            });
+            touchStartData = null;
+            touchMoveData = null;
+        }
+
+        function swapPieces(id1, id2) {
+            const p1 = puzzlePieces.find(p => p.id === id1);
+            const p2 = puzzlePieces.find(p => p.id === id2);
+            if (!p1 || !p2) return;
+            const temp = p1.currentPos;
+            p1.currentPos = p2.currentPos;
+            p2.currentPos = temp;
+        }
+
+        function checkPuzzleComplete() {
+            const solved = puzzlePieces.every(p => p.currentPos === p.id);
+            if (solved && !isPuzzleSolved) {
+                isPuzzleSolved = true;
+                document.getElementById('puzzleMessage').textContent = '🎉 Puzzle Complete! Redirecting to Reward...';
+                document.getElementById('puzzleMessage').style.color = '#2ecc71';
+                fireConfetti();
+
+                // Navigate to Page 10 (Video page) after a small delay
+                setTimeout(() => {
+                    const video = document.getElementById('rewardVideo');
+                    video.src = getVideoUrl();
+                    video.load();
+                    navigateTo(page10, 'page-transition-zoom');
+                }, 800);
+            } else if (!solved) {
+                document.getElementById('puzzleMessage').textContent = 'Keep arranging! You\'re doing great!';
+                document.getElementById('puzzleMessage').style.color = '#ffd700';
+            }
+        }
+
+        document.getElementById('shuffleBtn').addEventListener('click', function() {
+            if (isPuzzleSolved) {
+                puzzlePieces.forEach(p => p.currentPos = p.id);
+                isPuzzleSolved = false;
+                document.getElementById('puzzleMessage').textContent = 'Puzzle reset! Try again!';
+                document.getElementById('puzzleMessage').style.color = '#ffd700';
+            }
+            shufflePieces();
+            renderPuzzle();
+            document.getElementById('puzzleMessage').textContent = 'Puzzle shuffled! Try again!';
+            document.getElementById('puzzleMessage').style.color = '#ffd700';
+        });
+
+        // ================================================================
+        //  6.  EXISTING RAKHI LOGIC (Calendar, Time, Kuch nahi, etc.)
+        // ================================================================
+        let clickCounter = 0;
+        let selectedCuisine = null;
+        let selectedDate = null;
+        let selectedTime = null;
+        let selectedPlace = null;
+
+        const cuisineNames = {
+            'chinese': '🇨🇳 chinese',
+            'japanese': '🇯🇵 japanese',
+            'south-indian': '🇮🇳 south-indian',
+            'italian': '🇮🇹 italian',
+            'punjabi': '🇮🇳 punjabi',
+            'gujarati': '🇮🇳 gujarati',
+            'maharashtrian': '🇮🇳 maharashtrian'
+        };
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const monthNamesFull = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        function generateCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            const today = new Date();
+            const startDate = new Date(today);
+            startDate.setDate(today.getDate() + 1);
+            const endDate = new Date(today);
+            endDate.setDate(today.getDate() + 60);
+            let current = new Date(startDate);
+            while (current.getDay() !== 0) {
+                current.setDate(current.getDate() - 1);
+            }
+            let count = 0;
+            while (current <= endDate && count < 70) {
+                const dateObj = new Date(current);
+                const day = dateObj.getDay();
+                const isSunday = (day === 0);
+                const isPastToday = dateObj < startDate;
+                const div = document.createElement('div');
+                div.className = 'calendar-day';
+                if (isSunday && !isPastToday) {
+                    div.classList.add('sunday');
+                    const dayNumber = dateObj.getDate();
+                    const monthAbbr = monthNames[dateObj.getMonth()];
+                    div.innerHTML = `<span class="day-number">${dayNumber}</span><span class="month-name">${monthAbbr}</span>`;
+                    div.dataset.date = dateObj.toISOString().split('T')[0];
+                    div.addEventListener('click', function() {
+                        selectedDate = this.dataset.date;
+                        const d = new Date(this.dataset.date);
+                        const options = { weekday: 'long', day: 'numeric', month: 'long' };
+                        showToast(`📅 Selected Date: ${d.toLocaleDateString('en-IN', options)}`);
+                        fireConfetti();
+                        generateTimeSlots();
+                        navigateTo(page6, 'page-transition-slide');
+                    });
+                    div.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        selectedDate = this.dataset.date;
+                        const d = new Date(this.dataset.date);
+                        const options = { weekday: 'long', day: 'numeric', month: 'long' };
+                        showToast(`📅 Selected Date: ${d.toLocaleDateString('en-IN', options)}`);
+                        fireConfetti();
+                        generateTimeSlots();
+                        navigateTo(page6, 'page-transition-slide');
+                    }, { passive: false });
+                } else {
+                    div.classList.add('other-day');
+                    const dayNumber = dateObj.getDate();
+                    const monthAbbr = monthNames[dateObj.getMonth()];
+                    div.innerHTML = `<span class="day-number" style="opacity:0.4;">${dayNumber}</span><span class="month-name" style="opacity:0.3;">${monthAbbr}</span>`;
+                    div.style.cursor = 'not-allowed';
+                }
+                if (isPastToday) {
+                    div.classList.add('other-day');
+                    div.style.opacity = '0.25';
+                    div.style.cursor = 'not-allowed';
+                    div.classList.remove('sunday');
+                }
+                grid.appendChild(div);
+                current.setDate(current.getDate() + 1);
+                count++;
+            }
+        }
+
+        function generateTimeSlots() {
+            const container = document.getElementById('timeSlots');
+            container.innerHTML = '';
+            selectedTime = null;
+            const times = [
+                '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+                '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM',
+                '5:00 PM', '6:00 PM', '7:00 PM', '8:00 PM'
+            ];
+            times.forEach(t => {
+                const div = document.createElement('div');
+                div.className = 'time-slot';
+                div.textContent = t;
+                div.dataset.time = t;
+                div.addEventListener('click', function() {
+                    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedTime = this.dataset.time;
+                    showToast(`🕐 Selected Time: ${selectedTime}`);
+                });
+                div.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedTime = this.dataset.time;
+                    showToast(`🕐 Selected Time: ${selectedTime}`);
+                }, { passive: false });
+                container.appendChild(div);
+            });
+        }
+
+        function formatDateFull(dateStr) {
+            if (!dateStr) return '-';
+            const d = new Date(dateStr);
+            return `${d.getDate()} ${monthNamesFull[d.getMonth()]} ${d.getFullYear()}`;
+        }
+
+        function getCuisineName(key) {
+            return cuisineNames[key] || key || '-';
+        }
+
+        function getPlaceName(key) {
+            if (key === 'surat') return 'Surat';
+            if (key === 'mumbai') return 'Mumbai';
+            return key || '-';
+        }
+
+        function updateSummary() {
+            document.getElementById('summaryCuisine').textContent = getCuisineName(selectedCuisine);
+            document.getElementById('summaryDate').textContent = formatDateFull(selectedDate);
+            document.getElementById('summaryTime').textContent = selectedTime || '-';
+            document.getElementById('summaryPlace').textContent = getPlaceName(selectedPlace);
+        }
+
+        function resetButtonPositions() {
+            const nahiBtn = document.getElementById('nahiBtn');
+            nahiBtn.style.position = 'absolute';
+            nahiBtn.style.left = '50%';
+            nahiBtn.style.top = '80%';
+            nahiBtn.style.transform = 'translate(-50%, -50%)';
+            nahiBtn.style.boxShadow = '0 6px 25px rgba(214,48,49,0.4)';
+            const btnGroup = document.getElementById('btnGroup');
+            const desired = ['party', 'money'];
+            const current = [];
+            btnGroup.querySelectorAll('.btn').forEach(b => current.push(b.getAttribute('data-choice')));
+            if (current.join(',') !== desired.join(',')) {
+                desired.forEach(choice => {
+                    const btn = btnGroup.querySelector(`[data-choice="${choice}"]`);
+                    if (btn) btnGroup.appendChild(btn);
+                });
+            }
+            clickCounter = 0;
+        }
+
+        // Party & Money buttons navigation
+        document.querySelectorAll('.btn-party-p2').forEach(btn => {
+            btn.addEventListener('click', function() {
+                fireConfetti();
+                selectedCuisine = null;
+                selectedDate = null;
+                selectedTime = null;
+                selectedPlace = null;
+                navigateTo(page4, 'page-transition-slide');
+            });
+            btn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                fireConfetti();
+                selectedCuisine = null;
+                selectedDate = null;
+                selectedTime = null;
+                selectedPlace = null;
+                navigateTo(page4, 'page-transition-slide');
+            }, { passive: false });
+        });
+
+        document.querySelectorAll('.btn-money-p2').forEach(btn => {
+            btn.addEventListener('click', function() {
+                fireConfetti();
+                navigateTo(page3, 'page-transition-zoom');
+            });
+            btn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                fireConfetti();
+                navigateTo(page3, 'page-transition-zoom');
+            }, { passive: false });
+        });
+
+        // Cuisine buttons
+        document.querySelectorAll('.btn-cuisine').forEach(btn => {
+            btn.addEventListener('click', function() {
+                selectedCuisine = this.getAttribute('data-cuisine');
+                showToast(`🍽️ You Selected: ${cuisineNames[selectedCuisine] || selectedCuisine}`);
+                fireConfetti();
+                generateCalendar();
+                navigateTo(page5, 'page-transition-zoom');
+            });
+            btn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                selectedCuisine = this.getAttribute('data-cuisine');
+                showToast(`🍽️ You Selected: ${cuisineNames[selectedCuisine] || selectedCuisine}`);
+                fireConfetti();
+                generateCalendar();
+                navigateTo(page5, 'page-transition-zoom');
+            }, { passive: false });
+        });
+
+        // Next button from time slots
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            if (!selectedTime) {
+                showToast('⏳ Please select a time first!');
+                return;
+            }
+            if (!selectedDate) {
+                showToast('📅 Please select a date first!');
+                return;
+            }
+            fireConfetti();
+            navigateTo(page7, 'page-transition-zoom');
+        });
+        document.getElementById('nextBtn').addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            if (!selectedTime) {
+                showToast('⏳ Please select a time first!');
+                return;
+            }
+            if (!selectedDate) {
+                showToast('📅 Please select a date first!');
+                return;
+            }
+            fireConfetti();
+            navigateTo(page7, 'page-transition-zoom');
+        }, { passive: false });
+
+        // Place buttons
+        document.querySelectorAll('.btn-place').forEach(btn => {
+            btn.addEventListener('click', function() {
+                selectedPlace = this.getAttribute('data-place');
+                fireConfetti();
+                navigateTo(page8, 'page-transition-flip');
+                setTimeout(() => {
+                    updateSummary();
+                    if (page8.classList.contains('active')) {
+                        const data = {
+                            cuisine: getCuisineName(selectedCuisine),
+                            date: formatDateFull(selectedDate),
+                            time: selectedTime || '-',
+                            place: getPlaceName(selectedPlace),
+                            raw: {
+                                cuisineKey: selectedCuisine,
+                                date: selectedDate,
+                                time: selectedTime,
+                                place: selectedPlace
+                            },
+                            timestamp: new Date().toISOString()
+                        };
+                        sendToWebhook(data);
+                    }
+                }, 300);
+            });
+            btn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                selectedPlace = this.getAttribute('data-place');
+                fireConfetti();
+                navigateTo(page8, 'page-transition-flip');
+                setTimeout(() => {
+                    updateSummary();
+                    if (page8.classList.contains('active')) {
+                        const data = {
+                            cuisine: getCuisineName(selectedCuisine),
+                            date: formatDateFull(selectedDate),
+                            time: selectedTime || '-',
+                            place: getPlaceName(selectedPlace),
+                            raw: {
+                                cuisineKey: selectedCuisine,
+                                date: selectedDate,
+                                time: selectedTime,
+                                place: selectedPlace
+                            },
+                            timestamp: new Date().toISOString()
+                        };
+                        sendToWebhook(data);
+                    }
+                }, 300);
+            }, { passive: false });
+        });
+
+        // "Kuch nahi" logic (unclickable)
+        const nahiBtn = document.getElementById('nahiBtn');
+        const modal2 = document.getElementById('modal2');
+
+        function shufflePartyMoney() {
+            const btnGroup = document.getElementById('btnGroup');
+            const children = [...btnGroup.children];
+            for (let i = children.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [children[i], children[j]] = [children[j], children[i]];
+            }
+            children.forEach(child => btnGroup.appendChild(child));
+            btnGroup.querySelectorAll('.btn').forEach(b => {
+                b.classList.remove('shake');
+                void b.offsetWidth;
+                b.classList.add('shake');
+                setTimeout(() => b.classList.remove('shake'), 500);
+            });
+        }
+
+        function dodgeNahiButton() {
+            const modalRect = modal2.getBoundingClientRect();
+            const btnRect = nahiBtn.getBoundingClientRect();
+            const modalStyle = getComputedStyle(modal2);
+            const padLeft = parseFloat(modalStyle.paddingLeft);
+            const padRight = parseFloat(modalStyle.paddingRight);
+            const padTop = parseFloat(modalStyle.paddingTop);
+            const padBottom = parseFloat(modalStyle.paddingBottom);
+            const availWidth = modalRect.width - padLeft - padRight - 10;
+            const availHeight = modalRect.height - padTop - padBottom - 10;
+            const btnW = btnRect.width || 130;
+            const btnH = btnRect.height || 50;
+            let x = Math.random() * (availWidth - btnW) + padLeft;
+            let y = Math.random() * (availHeight - btnH) + padTop;
+            nahiBtn.style.left = x + 'px';
+            nahiBtn.style.top = y + 'px';
+            nahiBtn.style.transform = 'scale(1.05)';
+            nahiBtn.style.boxShadow = '0 0 60px rgba(214,48,49,0.9)';
+            setTimeout(() => {
+                nahiBtn.style.boxShadow = '0 6px 25px rgba(214,48,49,0.4)';
+                nahiBtn.style.transform = 'scale(1)';
+            }, 250);
+        }
+
+        function handleNahiAttempt(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            clickCounter++;
+            if (clickCounter === 4) {
+                showToast('💡 Dusre do option bhi try kro!');
+            }
+            dodgeNahiButton();
+            shufflePartyMoney();
+            setTimeout(() => {
+                if (nahiBtn.style.position !== 'absolute' || !nahiBtn.style.left) {
+                    dodgeNahiButton();
+                }
+            }, 80);
+        }
+
+        const blockEvents = ['pointerdown', 'mousedown', 'touchstart', 'click', 'contextmenu'];
+        blockEvents.forEach(eventType => {
+            nahiBtn.addEventListener(eventType, handleNahiAttempt, { passive: false, capture: true });
+        });
+
+        nahiBtn.addEventListener('mouseover', function() {
+            if (this.style.position !== 'absolute' || !this.style.left) {
+                dodgeNahiButton();
+            }
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!page2.classList.contains('active')) return;
+            const rect = nahiBtn.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+            if (dist < 80 && (nahiBtn.style.position !== 'absolute' || !nahiBtn.style.left)) {
+                dodgeNahiButton();
+            }
+        });
+
+        nahiBtn.setAttribute('tabindex', '-1');
+        nahiBtn.setAttribute('aria-hidden', 'true');
+
+        // ================================================================
+        //  7.  INIT
+        // ================================================================
+        page1.classList.add('active');
+        page2.classList.add('hidden');
+        page3.classList.add('hidden');
+        page4.classList.add('hidden');
+        page5.classList.add('hidden');
+        page6.classList.add('hidden');
+        page7.classList.add('hidden');
+        page8.classList.add('hidden');
+        page9.classList.add('hidden');
+        page10.classList.add('hidden');
+        resetButtonPositions();
+
+        console.log('🎀 Rakhi + Birthday Puzzle with Video Page loaded!');
+        console.log('🧩 Puzzle image: ' + getPuzzleImage());
+        console.log('🎥 Video URL: ' + getVideoUrl());
+    </script>
+</body>
+</html>
