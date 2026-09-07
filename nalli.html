@@ -28,15 +28,15 @@
         // ----- PUZZLE IMAGES (9 अलग-अलग Images – Numbered) -----
         // अपनी 9 Images के Paths यहाँ डालें (क्रम 1 से 9 तक)
         const PUZZLE_IMAGES = [
-            "image/bd/1.jpg",   // 1
-            "image/bd/2.jpg",   // 2
-            "image/bd/20.jpg",   // 3
-            "image/bd/01.jpg",   // 4
-            "image/bd/11.jpg",   // 5
-            "image/bd/21.jpg",   // 6
-            "image/bd/02.jpg",   // 7
-            "image/bd/12.jpg",   // 8
-            "image/bd/22.jpg"    // 9
+            "image/bd/1.jpg", // 1
+            "image/bd/2.jpg", // 2
+            "image/bd/20.jpg", // 3
+            "image/bd/01.jpg", // 4
+            "image/bd/11.jpg", // 5
+            "image/bd/21.jpg", // 6
+            "image/bd/02.jpg", // 7
+            "image/bd/12.jpg", // 8
+            "image/bd/22.jpg" // 9
         ];
 
         // Fallback URLs (अगर आपकी Images न मिलें तो ये Use होंगे)
@@ -53,7 +53,7 @@
         ];
 
         // VIDEO URL
-        const VIDEO_URL = "https://raw.githubusercontent.com/Darshan25111/rakhii/main/image/bd/WhatsApp%20Video%202026-09-07%20at%2011.57.32.mp4";        // अपना वीडियो डालें
+        const VIDEO_URL = "https://raw.githubusercontent.com/Darshan25111/rakhii/main/image/bd/WhatsApp%20Video%202026-09-07%20at%2011.57.32.mp4"; // अपना वीडियो डालें
         const DEFAULT_VIDEO_URL = "https://www.w3schools.com/html/mov_bbb.mp4";
     </script>
 
@@ -341,7 +341,7 @@
             line-height: 1.6;
             font-weight: 300;
             letter-spacing: 0.5px;
-            text-shadow: 0 0 12px rgba(255,255,255,0.1);
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
             opacity: 0.92;
         }
 
@@ -463,7 +463,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 0.4s ease;
             pointer-events: none;
@@ -637,36 +637,96 @@
             letter-spacing: 0.5px;
         }
 
-        .calendar-day:nth-child(1) { animation-delay: 0.04s; }
-        .calendar-day:nth-child(2) { animation-delay: 0.08s; }
-        .calendar-day:nth-child(3) { animation-delay: 0.12s; }
-        .calendar-day:nth-child(4) { animation-delay: 0.16s; }
-        .calendar-day:nth-child(5) { animation-delay: 0.20s; }
-        .calendar-day:nth-child(6) { animation-delay: 0.24s; }
-        .calendar-day:nth-child(7) { animation-delay: 0.28s; }
-        .calendar-day:nth-child(8) { animation-delay: 0.32s; }
-        .calendar-day:nth-child(9) { animation-delay: 0.36s; }
-        .calendar-day:nth-child(10) { animation-delay: 0.40s; }
-        .calendar-day:nth-child(11) { animation-delay: 0.44s; }
-        .calendar-day:nth-child(12) { animation-delay: 0.48s; }
-        .calendar-day:nth-child(13) { animation-delay: 0.52s; }
-        .calendar-day:nth-child(14) { animation-delay: 0.56s; }
-        .calendar-day:nth-child(15) { animation-delay: 0.60s; }
-        .calendar-day:nth-child(16) { animation-delay: 0.64s; }
-        .calendar-day:nth-child(17) { animation-delay: 0.68s; }
-        .calendar-day:nth-child(18) { animation-delay: 0.72s; }
-        .calendar-day:nth-child(19) { animation-delay: 0.76s; }
-        .calendar-day:nth-child(20) { animation-delay: 0.80s; }
-        .calendar-day:nth-child(21) { animation-delay: 0.84s; }
-        .calendar-day:nth-child(22) { animation-delay: 0.88s; }
-        .calendar-day:nth-child(23) { animation-delay: 0.92s; }
-        .calendar-day:nth-child(24) { animation-delay: 0.96s; }
-        .calendar-day:nth-child(25) { animation-delay: 1.00s; }
-        .calendar-day:nth-child(26) { animation-delay: 1.04s; }
-        .calendar-day:nth-child(27) { animation-delay: 1.08s; }
-        .calendar-day:nth-child(28) { animation-delay: 1.12s; }
-        .calendar-day:nth-child(29) { animation-delay: 1.16s; }
-        .calendar-day:nth-child(30) { animation-delay: 1.20s; }
+        .calendar-day:nth-child(1) {
+            animation-delay: 0.04s;
+        }
+        .calendar-day:nth-child(2) {
+            animation-delay: 0.08s;
+        }
+        .calendar-day:nth-child(3) {
+            animation-delay: 0.12s;
+        }
+        .calendar-day:nth-child(4) {
+            animation-delay: 0.16s;
+        }
+        .calendar-day:nth-child(5) {
+            animation-delay: 0.20s;
+        }
+        .calendar-day:nth-child(6) {
+            animation-delay: 0.24s;
+        }
+        .calendar-day:nth-child(7) {
+            animation-delay: 0.28s;
+        }
+        .calendar-day:nth-child(8) {
+            animation-delay: 0.32s;
+        }
+        .calendar-day:nth-child(9) {
+            animation-delay: 0.36s;
+        }
+        .calendar-day:nth-child(10) {
+            animation-delay: 0.40s;
+        }
+        .calendar-day:nth-child(11) {
+            animation-delay: 0.44s;
+        }
+        .calendar-day:nth-child(12) {
+            animation-delay: 0.48s;
+        }
+        .calendar-day:nth-child(13) {
+            animation-delay: 0.52s;
+        }
+        .calendar-day:nth-child(14) {
+            animation-delay: 0.56s;
+        }
+        .calendar-day:nth-child(15) {
+            animation-delay: 0.60s;
+        }
+        .calendar-day:nth-child(16) {
+            animation-delay: 0.64s;
+        }
+        .calendar-day:nth-child(17) {
+            animation-delay: 0.68s;
+        }
+        .calendar-day:nth-child(18) {
+            animation-delay: 0.72s;
+        }
+        .calendar-day:nth-child(19) {
+            animation-delay: 0.76s;
+        }
+        .calendar-day:nth-child(20) {
+            animation-delay: 0.80s;
+        }
+        .calendar-day:nth-child(21) {
+            animation-delay: 0.84s;
+        }
+        .calendar-day:nth-child(22) {
+            animation-delay: 0.88s;
+        }
+        .calendar-day:nth-child(23) {
+            animation-delay: 0.92s;
+        }
+        .calendar-day:nth-child(24) {
+            animation-delay: 0.96s;
+        }
+        .calendar-day:nth-child(25) {
+            animation-delay: 1.00s;
+        }
+        .calendar-day:nth-child(26) {
+            animation-delay: 1.04s;
+        }
+        .calendar-day:nth-child(27) {
+            animation-delay: 1.08s;
+        }
+        .calendar-day:nth-child(28) {
+            animation-delay: 1.12s;
+        }
+        .calendar-day:nth-child(29) {
+            animation-delay: 1.16s;
+        }
+        .calendar-day:nth-child(30) {
+            animation-delay: 1.20s;
+        }
 
         @keyframes fadeInDay {
             0% {
@@ -1308,7 +1368,7 @@
             margin-bottom: 12px;
         }
 
-        /* ----- Carousel with Glow & Hover (No Click, No Pause) ----- */
+        /* ----- Carousel with GLOW REMOVED & Click-to-Zoom ----- */
         #page9 .image-carousel {
             position: relative;
             overflow: hidden;
@@ -1331,47 +1391,120 @@
             object-fit: cover;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            /* No cursor: pointer */
-            /* Glow animation */
-            animation: carouselGlow 2s ease-in-out infinite alternate;
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.35s ease;
+            cursor: zoom-in;
+            /* No glow animation – removed per user request */
+            /* Keep a subtle box-shadow but no pulsing glow */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
 
-        @keyframes carouselGlow {
-            0% {
-                box-shadow: 0 0 10px rgba(0, 255, 100, 0.3), 0 4px 10px rgba(0,0,0,0.5);
-            }
-            100% {
-                box-shadow: 0 0 30px rgba(0, 255, 100, 0.7), 0 8px 20px rgba(0,0,0,0.6);
-            }
-        }
-
-        /* Hover: enlarge only – no pause, no click */
+        /* Hover: smooth scale up – but not too big, just a hint */
         #page9 .carousel-track img:hover {
-            transform: scale(1.15);
-            box-shadow: 0 0 40px rgba(0, 255, 100, 0.9);
+            transform: scale(1.08);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
             z-index: 2;
             position: relative;
         }
 
-        /* Keep animation running always */
+        /* The carousel continues running even on hover */
         #page9 .image-carousel .carousel-track {
             animation-play-state: running !important;
         }
 
-        /* Heading above carousel */
+        @keyframes scrollHorizontal {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* ----- LIGHTBOX OVERLAY (for zoom) ----- */
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .lightbox-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-overlay .lightbox-content {
+            position: relative;
+            max-width: 92vw;
+            max-height: 92vh;
+            cursor: default;
+            animation: lightboxZoomIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            transform-origin: center center;
+        }
+
+        @keyframes lightboxZoomIn {
+            0% {
+                transform: scale(0.7) rotate(-2deg);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .lightbox-overlay .lightbox-content img {
+            width: auto;
+            height: auto;
+            max-width: 92vw;
+            max-height: 92vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.8);
+            display: block;
+        }
+
+        .lightbox-overlay .lightbox-close-hint {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            pointer-events: none;
+            white-space: nowrap;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (max-width: 640px) {
+            .lightbox-overlay .lightbox-close-hint {
+                bottom: -40px;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* ----- "Memories" heading above carousel ----- */
         .memories-heading {
             font-size: 1.8rem;
             font-weight: 700;
             color: #ffd700;
-            text-shadow: 0 0 20px rgba(255,215,0,0.5), 0 0 40px rgba(255,215,0,0.2);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.2);
             margin: 10px 0 5px;
             letter-spacing: 1px;
-        }
-
-        @keyframes scrollHorizontal {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
         }
 
         /* Puzzle Styles (inside Page 9) – Modified for 9 individual images */
@@ -1382,10 +1515,10 @@
             max-width: 400px;
             margin: 20px auto;
             aspect-ratio: 1 / 1;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
             padding: 6px;
             border-radius: 12px;
-            box-shadow: 0 0 30px rgba(79,195,247,0.1);
+            box-shadow: 0 0 30px rgba(79, 195, 247, 0.1);
         }
 
         .puzzle-piece {
@@ -1396,7 +1529,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            border: 2px solid rgba(255,255,255,0.1);
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         .puzzle-piece:active {
@@ -1406,7 +1539,7 @@
         .puzzle-piece.dragging {
             opacity: 0.7;
             transform: scale(0.95);
-            box-shadow: 0 0 20px rgba(255,215,0,0.6);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
         }
 
         .puzzle-piece.correct {
@@ -1432,12 +1565,12 @@
             cursor: pointer;
             transition: all 0.3s;
             margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(247,151,30,0.4);
+            box-shadow: 0 4px 15px rgba(247, 151, 30, 0.4);
         }
 
         .btn-shuffle:hover {
             transform: scale(1.05);
-            box-shadow: 0 8px 30px rgba(247,151,30,0.6);
+            box-shadow: 0 8px 30px rgba(247, 151, 30, 0.6);
         }
 
         /* Puzzle Call-to-Action Line (Instruction) */
@@ -1445,15 +1578,22 @@
             font-size: 1.3rem;
             font-weight: 700;
             color: #4fc3f7;
-            text-shadow: 0 0 20px rgba(79,195,247,0.5), 0 0 40px rgba(79,195,247,0.2);
+            text-shadow: 0 0 20px rgba(79, 195, 247, 0.5), 0 0 40px rgba(79, 195, 247, 0.2);
             margin: 5px 0 10px;
             letter-spacing: 0.5px;
             animation: pulseCta 2s ease-in-out infinite;
         }
 
         @keyframes pulseCta {
-            0%, 100% { transform: scale(1); opacity: 0.9; }
-            50% { transform: scale(1.05); opacity: 1; }
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
         }
 
         /* ---------- PAGE 10 – VIDEO PAGE ---------- */
@@ -1472,8 +1612,8 @@
             width: 100%;
             max-height: 70vh;
             border-radius: 20px;
-            box-shadow: 0 0 60px rgba(255,215,0,0.3);
-            border: 2px solid rgba(255,215,0,0.2);
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.3);
+            border: 2px solid rgba(255, 215, 0, 0.2);
             background: #000;
         }
 
@@ -1482,7 +1622,7 @@
             font-size: 1.5rem;
             font-weight: 700;
             margin-top: 15px;
-            text-shadow: 0 0 30px rgba(255,215,0,0.4);
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
         }
 
         /* Responsive for Page 10 */
@@ -1510,6 +1650,14 @@
     <!-- ====== CONFETTI BURST CONTAINER ====== -->
     <div class="confetti-burst" id="confettiBurst"></div>
 
+    <!-- ====== LIGHTBOX OVERLAY ====== -->
+    <div class="lightbox-overlay" id="lightboxOverlay">
+        <div class="lightbox-content" id="lightboxContent">
+            <img id="lightboxImg" src="" alt="Enlarged view" />
+            <div class="lightbox-close-hint">✕ tap outside to close</div>
+        </div>
+    </div>
+
     <!-- ========================================================== -->
     <!-- ====== PAGE 1 – BIRTHDAY WISH ====== -->
     <!-- ========================================================== -->
@@ -1522,8 +1670,8 @@
                 क्योंकि आज <span class="highlight">आप</span> का दिन है!<br />
                 ढेर सारी खुशियाँ, प्यार और मुस्कानें आपके साथ रहें। ✨<br />
                 <span style="color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.4);">
-                ये दिन आपके लिए है – इसे खुलकर जिएँ,<br />
-                और हर पल को यादगार बनाएँ। 🥳
+                    ये दिन आपके लिए है – इसे खुलकर जिएँ,<br />
+                    और हर पल को यादगार बनाएँ। 🥳
                 </span>
             </p>
             <p class="sub-text" style="font-size:0.95rem; opacity:0.7; margin-top:-6px;">
@@ -1718,27 +1866,27 @@
                 <p style="text-align:center;">Wishes by your Temp Friend</p>
             </div>
 
-            <!-- Image Carousel with Glow & Hover (No Click, No Pause) -->
+            <!-- Image Carousel with GLOW REMOVED & Click-to-Zoom -->
             <div class="memories-heading">📸 Memories</div>
-            <div class="image-carousel">
-                <div class="carousel-track">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.44.jpeg" alt="Image 1">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.45.jpeg" alt="Image 2">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.46.jpeg" alt="Image 3">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.47.jpeg" alt="Image 4">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.48.jpeg" alt="Image 5">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.49.jpeg" alt="Image 6">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.40.jpeg" alt="Image 7">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.41.jpeg" alt="Image 8">
+            <div class="image-carousel" id="carouselContainer">
+                <div class="carousel-track" id="carouselTrack">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.44.jpeg" alt="Image 1" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.45.jpeg" alt="Image 2" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.46.jpeg" alt="Image 3" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.47.jpeg" alt="Image 4" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.48.jpeg" alt="Image 5" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.49.jpeg" alt="Image 6" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.40.jpeg" alt="Image 7" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.41.jpeg" alt="Image 8" loading="lazy">
                     <!-- Duplicate for smooth loop -->
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.44.jpeg" alt="Image 1">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.45.jpeg" alt="Image 2">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.46.jpeg" alt="Image 3">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.47.jpeg" alt="Image 4">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.48.jpeg" alt="Image 5">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.49.jpeg" alt="Image 6">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.40.jpeg" alt="Image 7">
-                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.41.jpeg" alt="Image 8">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.44.jpeg" alt="Image 1" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.45.jpeg" alt="Image 2" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.46.jpeg" alt="Image 3" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.47.jpeg" alt="Image 4" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.48.jpeg" alt="Image 5" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.49.jpeg" alt="Image 6" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.40.jpeg" alt="Image 7" loading="lazy">
+                    <img src="image/bd/WhatsApp Image 2026-09-07 at 11.36.41.jpeg" alt="Image 8" loading="lazy">
                 </div>
             </div>
 
@@ -1792,7 +1940,6 @@
         const videoElement = document.getElementById('rewardVideo');
         let musicStarted = false;
 
-        // Function to start/unmute music on user interaction
         function startMusic() {
             if (!musicStarted) {
                 bgMusic.muted = false;
@@ -1805,11 +1952,9 @@
             }
         }
 
-        // Listen for any click/tap to start music
         document.addEventListener('click', startMusic);
         document.addEventListener('touchstart', startMusic);
 
-        // Also try on load (but may be blocked)
         window.addEventListener('load', function() {
             bgMusic.muted = false;
             bgMusic.play().then(() => {
@@ -1947,7 +2092,9 @@
         // ================================================================
         function fireConfetti() {
             const burst = document.getElementById('confettiBurst');
-            const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#ffd93d', '#6bcb77', '#ff8a5c', '#00d2d3', '#f368e0', '#4fc3f7'];
+            const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#ffd93d', '#6bcb77', '#ff8a5c',
+                '#00d2d3', '#f368e0', '#4fc3f7'
+            ];
             for (let i = 0; i < 100; i++) {
                 const piece = document.createElement('div');
                 piece.className = 'confetti-piece';
@@ -2012,7 +2159,6 @@
         function navigateTo(page, transitionClass = 'page-transition-flip') {
             const activePage = document.querySelector('.page.active');
 
-            // If leaving video page, pause video and resume bg music
             if (activePage && activePage.id === 'page10') {
                 if (videoElement) {
                     videoElement.pause();
@@ -2036,7 +2182,6 @@
             requestAnimationFrame(() => {
                 page.classList.add('active');
 
-                // If entering video page, pause bg music
                 if (page.id === 'page10') {
                     if (bgMusic) {
                         bgMusic.pause();
@@ -2048,7 +2193,6 @@
         function navigateBack(targetPage, transitionClass = 'page-transition-back-flip') {
             const activePage = document.querySelector('.page.active');
 
-            // If leaving video page, pause video and resume bg music
             if (activePage && activePage.id === 'page10') {
                 if (videoElement) {
                     videoElement.pause();
@@ -2271,17 +2415,17 @@
                 const numSpan = document.createElement('span');
                 numSpan.textContent = piece.imageIndex + 1;
                 numSpan.style.cssText = `
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    font-size: 2rem;
-                    font-weight: 900;
-                    color: rgba(255,255,255,0.9);
-                    text-shadow: 0 0 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.7);
-                    pointer-events: none;
-                    font-family: 'Poppins', sans-serif;
-                `;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        font-size: 2rem;
+                        font-weight: 900;
+                        color: rgba(255,255,255,0.9);
+                        text-shadow: 0 0 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.7);
+                        pointer-events: none;
+                        font-family: 'Poppins', sans-serif;
+                    `;
                 div.appendChild(numSpan);
 
                 if (piece.currentPos === piece.imageIndex) {
@@ -2438,7 +2582,102 @@
         });
 
         // ================================================================
-        //  6.  EXISTING RAKHI LOGIC (Calendar, Time, Kuch nahi, etc.)
+        //  6.  CAROUSEL LIGHTBOX (Click/Touch to Zoom)
+        // ================================================================
+        (function initCarouselZoom() {
+            const overlay = document.getElementById('lightboxOverlay');
+            const lightboxImg = document.getElementById('lightboxImg');
+            const carouselImages = document.querySelectorAll('#page9 .carousel-track img');
+            let isLightboxOpen = false;
+
+            function openLightbox(imgSrc) {
+                lightboxImg.src = imgSrc;
+                overlay.classList.add('active');
+                isLightboxOpen = true;
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeLightbox() {
+                overlay.classList.remove('active');
+                isLightboxOpen = false;
+                document.body.style.overflow = '';
+            }
+
+            // Click on carousel image → open lightbox
+            carouselImages.forEach(img => {
+                img.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (!isLightboxOpen) {
+                        openLightbox(this.src);
+                    }
+                });
+
+                // Touch: open on touchstart, close on touchend (if not swiped)
+                let touchTimer = null;
+                let startX = 0,
+                    startY = 0;
+
+                img.addEventListener('touchstart', function(e) {
+                    const touch = e.touches[0];
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                    // Open immediately on touch
+                    if (!isLightboxOpen) {
+                        openLightbox(this.src);
+                    }
+                    // Clear any existing timer
+                    if (touchTimer) clearTimeout(touchTimer);
+                }, { passive: true });
+
+                img.addEventListener('touchmove', function(e) {
+                    // If user swipes, close lightbox
+                    if (isLightboxOpen) {
+                        const touch = e.touches[0];
+                        const dx = touch.clientX - startX;
+                        const dy = touch.clientY - startY;
+                        if (Math.abs(dx) > 30 || Math.abs(dy) > 30) {
+                            closeLightbox();
+                        }
+                    }
+                }, { passive: true });
+
+                img.addEventListener('touchend', function(e) {
+                    // Close after a small delay if still open (unless user tapped on overlay)
+                    if (isLightboxOpen) {
+                        touchTimer = setTimeout(() => {
+                            closeLightbox();
+                        }, 400);
+                    }
+                }, { passive: true });
+            });
+
+            // Click on overlay background (not on image) → close
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay || e.target === this) {
+                    closeLightbox();
+                }
+            });
+
+            // Touch on overlay background → close
+            overlay.addEventListener('touchstart', function(e) {
+                if (e.target === overlay || e.target === this) {
+                    closeLightbox();
+                }
+            }, { passive: true });
+
+            // Close on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isLightboxOpen) {
+                    closeLightbox();
+                }
+            });
+
+            // When lightbox closes, ensure carousel continues (it always does)
+            console.log('🖼️ Carousel lightbox initialized – click/touch to zoom, tap outside to close');
+        })();
+
+        // ================================================================
+        //  7.  EXISTING RAKHI LOGIC (Calendar, Time, Kuch nahi, etc.)
         // ================================================================
         let clickCounter = 0;
         let selectedCuisine = null;
@@ -2456,7 +2695,9 @@
             'maharashtrian': '🇮🇳 maharashtrian'
         };
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const monthNamesFull = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const monthNamesFull = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+            'October', 'November', 'December'
+        ];
 
         function generateCalendar() {
             const grid = document.getElementById('calendarGrid');
@@ -2482,7 +2723,8 @@
                     div.classList.add('sunday');
                     const dayNumber = dateObj.getDate();
                     const monthAbbr = monthNames[dateObj.getMonth()];
-                    div.innerHTML = `<span class="day-number">${dayNumber}</span><span class="month-name">${monthAbbr}</span>`;
+                    div.innerHTML =
+                        `<span class="day-number">${dayNumber}</span><span class="month-name">${monthAbbr}</span>`;
                     div.dataset.date = dateObj.toISOString().split('T')[0];
                     div.addEventListener('click', function() {
                         selectedDate = this.dataset.date;
@@ -2507,7 +2749,8 @@
                     div.classList.add('other-day');
                     const dayNumber = dateObj.getDate();
                     const monthAbbr = monthNames[dateObj.getMonth()];
-                    div.innerHTML = `<span class="day-number" style="opacity:0.4;">${dayNumber}</span><span class="month-name" style="opacity:0.3;">${monthAbbr}</span>`;
+                    div.innerHTML =
+                        `<span class="day-number" style="opacity:0.4;">${dayNumber}</span><span class="month-name" style="opacity:0.3;">${monthAbbr}</span>`;
                     div.style.cursor = 'not-allowed';
                 }
                 if (isPastToday) {
@@ -2814,7 +3057,7 @@
         nahiBtn.setAttribute('aria-hidden', 'true');
 
         // ================================================================
-        //  7.  INIT
+        //  8.  INIT
         // ================================================================
         page1.classList.add('active');
         page2.classList.add('hidden');
@@ -2832,7 +3075,7 @@
         console.log('🧩 Puzzle images: ', getPuzzleImages());
         console.log('🎥 Video URL: ' + getVideoUrl());
         console.log('🎵 Music will pause when video plays, resume on back.');
-        console.log('🖼️ Carousel: No click, no pause – just hover to enlarge!');
+        console.log('🖼️ Carousel: Click/touch to zoom, tap outside to close. Glow removed.');
     </script>
 </body>
 </html>
