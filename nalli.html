@@ -25,12 +25,35 @@
     </style>
 
     <script>
-        // ----- PUZZLE IMAGE & VIDEO PATHS (यहाँ बदलें, Fallback भी सेट) -----
-        const PUZZLE_IMAGE = "C:/Users/tzuyu/OneDrive/Desktop/Bond1.png";   // अपनी इमेज डालें
-        const VIDEO_URL = "video/surprise.mp4";         // अपना वीडियो डालें
+        // ----- PUZZLE IMAGES (9 अलग-अलग Images – Numbered) -----
+        // अपनी 9 Images के Paths यहाँ डालें (क्रम 1 से 9 तक)
+        const PUZZLE_IMAGES = [
+            "C:/Users/tzuyu/OneDrive/Desktop/26275-split/imageonline/1.jpg",   // 1
+            "C:/Users/tzuyu/OneDrive/Desktop/26275-split/imageonline/2.jpg",   // 2
+            "C:/Users/tzuyu/OneDrive/Desktop/26275-split/imageonline/20.jpg",   // 3
+            "C:/Users/tzuyu/OneDrive/Desktop/26275-split/imageonline/01.jpg",   // 4
+            "C:/Users/tzuyu/OneDrive/Desktop/26275-split/imageonline/11.jpg",   // 5
+            "C:/Users/tzuyu/OneDrive/Desktop/26275-split/imageonline/21.jpg",   // 6
+            "C:/Users/tzuyu/OneDrive/Desktop/26275-split/imageonline/02.jpg",   // 7
+            "C:/Users/tzuyu/OneDrive/Desktop/26275-split/imageonline/12.jpg",   // 8
+            "C:/Users/tzuyu/OneDrive/Desktop/26275-split/imageonline/22.jpg"    // 9
+        ];
 
-        // Fallback URLs (अगर उपरोक्त Path काम न करें तो ये Use होंगे)
-        const DEFAULT_PUZZLE_IMAGE = "https://picsum.photos/seed/puzzle/400/400";
+        // Fallback URLs (अगर आपकी Images न मिलें तो ये Use होंगे)
+        const DEFAULT_PUZZLE_IMAGES = [
+            "https://picsum.photos/seed/p1/200/200",
+            "https://picsum.photos/seed/p2/200/200",
+            "https://picsum.photos/seed/p3/200/200",
+            "https://picsum.photos/seed/p4/200/200",
+            "https://picsum.photos/seed/p5/200/200",
+            "https://picsum.photos/seed/p6/200/200",
+            "https://picsum.photos/seed/p7/200/200",
+            "https://picsum.photos/seed/p8/200/200",
+            "https://picsum.photos/seed/p9/200/200"
+        ];
+
+        // VIDEO URL
+        const VIDEO_URL = "video/surprise.mp4";         // अपना वीडियो डालें
         const DEFAULT_VIDEO_URL = "https://www.w3schools.com/html/mov_bbb.mp4";
     </script>
 
@@ -1314,7 +1337,7 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* Puzzle Styles (inside Page 9) */
+        /* Puzzle Styles (inside Page 9) – Modified for 9 individual images */
         .puzzle-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1329,12 +1352,14 @@
         }
 
         .puzzle-piece {
-            background-size: 300% 300%;
             border-radius: 6px;
             cursor: grab;
             transition: transform 0.15s, box-shadow 0.15s;
             position: relative;
-            background-image: var(--puzzle-image);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 2px solid rgba(255,255,255,0.1);
         }
 
         .puzzle-piece:active {
@@ -1349,7 +1374,7 @@
 
         .puzzle-piece.correct {
             box-shadow: 0 0 15px rgba(46, 213, 115, 0.6);
-            border: 2px solid #2ecc71;
+            border-color: #2ecc71;
         }
 
         .puzzle-message {
@@ -1626,7 +1651,7 @@
     </div>
 
     <!-- ========================================================== -->
-    <!-- ====== PAGE 9 – BIRTHDAY SURPRISE (WITH PUZZLE) ====== -->
+    <!-- ====== PAGE 9 – BIRTHDAY SURPRISE (WITH PUZZLE – 9 Images) ====== -->
     <!-- ========================================================== -->
     <div class="page" id="page9">
         <div class="modal">
@@ -1681,12 +1706,11 @@
 
             <p style="margin-top:20px; font-size:0.9rem; opacity:0.6;">Made with love by Friends and Families 💖</p>
 
-            <!-- ===== PUZZLE GAME ===== -->
-            <!-- CTA Line -->
+            <!-- ===== PUZZLE GAME (9 Images) ===== -->
             <div class="puzzle-cta">🧩 Puzzle Solve Karo Aur Reward Dekho! 🎁</div>
 
             <div class="puzzle-container" id="puzzleContainer"></div>
-            <div class="puzzle-message" id="puzzleMessage">Arrange the pieces to complete the picture!</div>
+            <div class="puzzle-message" id="puzzleMessage">Arrange the pieces (1–9) in correct order!</div>
             <button class="btn-shuffle" id="shuffleBtn">🔀 Shuffle</button>
 
         </div>
@@ -2064,17 +2088,17 @@
         }, { passive: false });
 
         // ================================================================
-        //  5.  PUZZLE GAME (Page 9) – with Fallback and Video Page Navigation
+        //  5.  PUZZLE GAME (Page 9) – 9 INDIVIDUAL IMAGES
         // ================================================================
         let puzzlePieces = [];
         let dragData = null;
         let isPuzzleSolved = false;
 
-        function getPuzzleImage() {
-            if (typeof PUZZLE_IMAGE !== 'undefined' && PUZZLE_IMAGE && PUZZLE_IMAGE.trim() !== '') {
-                return PUZZLE_IMAGE;
+        function getPuzzleImages() {
+            if (Array.isArray(PUZZLE_IMAGES) && PUZZLE_IMAGES.length === 9) {
+                return PUZZLE_IMAGES;
             }
-            return DEFAULT_PUZZLE_IMAGE;
+            return DEFAULT_PUZZLE_IMAGES;
         }
 
         function getVideoUrl() {
@@ -2086,30 +2110,31 @@
 
         function initPuzzle() {
             const container = document.getElementById('puzzleContainer');
-            const imgUrl = getPuzzleImage();
-            container.style.setProperty('--puzzle-image', `url('${imgUrl}')`);
+            const images = getPuzzleImages();
 
-            const pieces = [];
-            for (let row = 0; row < 3; row++) {
-                for (let col = 0; col < 3; col++) {
-                    pieces.push({
-                        id: row * 3 + col,
-                        row: row,
-                        col: col,
-                        currentPos: row * 3 + col
-                    });
-                }
+            // Initialize puzzle pieces
+            puzzlePieces = [];
+            for (let i = 0; i < 9; i++) {
+                puzzlePieces.push({
+                    id: i,                // Unique ID
+                    imageIndex: i,        // Which image (0-8)
+                    currentPos: i         // Currently at position i (will be shuffled)
+                });
             }
-            puzzlePieces = pieces;
+
             isPuzzleSolved = false;
-            document.getElementById('puzzleMessage').textContent = 'Arrange the pieces to complete the picture!';
+            document.getElementById('puzzleMessage').textContent = 'Arrange pieces 1–9 in correct order!';
             document.getElementById('puzzleMessage').style.color = '#ffd700';
 
+            // Store images for rendering
+            container.dataset.images = JSON.stringify(images);
+
             shufflePieces();
-            renderPuzzle();
+            renderPuzzle(images);
         }
 
         function shufflePieces() {
+            // Shuffle currentPos
             let positions = puzzlePieces.map(p => p.currentPos);
             for (let i = positions.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -2120,41 +2145,66 @@
             });
         }
 
-        function renderPuzzle() {
+        function renderPuzzle(images) {
             const container = document.getElementById('puzzleContainer');
             container.innerHTML = '';
             const sorted = [...puzzlePieces].sort((a, b) => a.currentPos - b.currentPos);
+
             sorted.forEach(piece => {
                 const div = document.createElement('div');
                 div.className = 'puzzle-piece';
                 div.dataset.id = piece.id;
-                div.dataset.row = piece.row;
-                div.dataset.col = piece.col;
-                const xPos = (piece.col * 33.33) + '%';
-                const yPos = (piece.row * 33.33) + '%';
-                div.style.backgroundPosition = xPos + ' ' + yPos;
-                if (piece.currentPos === piece.id) {
+                div.dataset.correctPos = piece.imageIndex; // store correct index
+
+                // Set background image
+                const imgUrl = images[piece.imageIndex];
+                div.style.backgroundImage = `url('${imgUrl}')`;
+
+                // Add number overlay
+                const numSpan = document.createElement('span');
+                numSpan.textContent = piece.imageIndex + 1;
+                numSpan.style.cssText = `
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    font-size: 2rem;
+                    font-weight: 900;
+                    color: rgba(255,255,255,0.9);
+                    text-shadow: 0 0 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.7);
+                    pointer-events: none;
+                    font-family: 'Poppins', sans-serif;
+                `;
+                div.appendChild(numSpan);
+
+                // Mark correct if already in place
+                if (piece.currentPos === piece.imageIndex) {
                     div.classList.add('correct');
+                    div.style.borderColor = '#2ecc71';
                 }
+
+                // Drag events
                 div.setAttribute('draggable', 'true');
                 div.addEventListener('dragstart', handleDragStart);
                 div.addEventListener('dragover', handleDragOver);
                 div.addEventListener('drop', handleDrop);
                 div.addEventListener('dragend', handleDragEnd);
+
                 // Touch events
                 div.addEventListener('touchstart', handleTouchStart, { passive: true });
                 div.addEventListener('touchmove', handleTouchMove, { passive: false });
                 div.addEventListener('touchend', handleTouchEnd, { passive: false });
+
                 container.appendChild(div);
             });
         }
 
+        // ----- Drag & Drop Handlers -----
         function handleDragStart(e) {
-            const piece = e.target;
+            const piece = e.target.closest('.puzzle-piece');
+            if (!piece) return;
             dragData = {
-                id: parseInt(piece.dataset.id),
-                row: parseInt(piece.dataset.row),
-                col: parseInt(piece.dataset.col)
+                id: parseInt(piece.dataset.id)
             };
             piece.classList.add('dragging');
             e.dataTransfer.effectAllowed = 'move';
@@ -2173,7 +2223,8 @@
             const targetId = parseInt(target.dataset.id);
             if (dragData && dragData.id !== targetId) {
                 swapPieces(dragData.id, targetId);
-                renderPuzzle();
+                const images = JSON.parse(document.getElementById('puzzleContainer').dataset.images);
+                renderPuzzle(images);
                 checkPuzzleComplete();
             }
             dragData = null;
@@ -2184,8 +2235,8 @@
             dragData = null;
         }
 
+        // ----- Touch Handlers -----
         let touchStartData = null;
-        let touchMoveData = null;
 
         function handleTouchStart(e) {
             const piece = e.target.closest('.puzzle-piece');
@@ -2203,10 +2254,6 @@
             e.preventDefault();
             if (!touchStartData) return;
             const touch = e.touches[0];
-            touchMoveData = {
-                x: touch.clientX,
-                y: touch.clientY
-            };
             const pieces = document.querySelectorAll('.puzzle-piece');
             pieces.forEach(p => p.style.opacity = '1');
             touchStartData.piece.style.opacity = '0.5';
@@ -2214,7 +2261,7 @@
             if (target && target.closest('.puzzle-piece')) {
                 const targetPiece = target.closest('.puzzle-piece');
                 if (targetPiece !== touchStartData.piece) {
-                    targetPiece.style.boxShadow = '0 0 20px rgba(255,215,0,0.8)';
+                    targetPiece.style.boxShadow = '0 0 30px rgba(255,215,0,0.9)';
                 }
             }
         }
@@ -2228,7 +2275,8 @@
                 const targetId = parseInt(targetPiece.dataset.id);
                 if (targetId !== touchStartData.id) {
                     swapPieces(touchStartData.id, targetId);
-                    renderPuzzle();
+                    const images = JSON.parse(document.getElementById('puzzleContainer').dataset.images);
+                    renderPuzzle(images);
                     checkPuzzleComplete();
                 }
             }
@@ -2239,9 +2287,9 @@
                 p.style.opacity = '1';
             });
             touchStartData = null;
-            touchMoveData = null;
         }
 
+        // ----- Swap & Check Functions -----
         function swapPieces(id1, id2) {
             const p1 = puzzlePieces.find(p => p.id === id1);
             const p2 = puzzlePieces.find(p => p.id === id2);
@@ -2252,14 +2300,13 @@
         }
 
         function checkPuzzleComplete() {
-            const solved = puzzlePieces.every(p => p.currentPos === p.id);
+            const solved = puzzlePieces.every(p => p.currentPos === p.imageIndex);
             if (solved && !isPuzzleSolved) {
                 isPuzzleSolved = true;
                 document.getElementById('puzzleMessage').textContent = '🎉 Puzzle Complete! Redirecting to Reward...';
                 document.getElementById('puzzleMessage').style.color = '#2ecc71';
                 fireConfetti();
 
-                // Navigate to Page 10 (Video page) after a small delay
                 setTimeout(() => {
                     const video = document.getElementById('rewardVideo');
                     video.src = getVideoUrl();
@@ -2267,21 +2314,24 @@
                     navigateTo(page10, 'page-transition-zoom');
                 }, 800);
             } else if (!solved) {
-                document.getElementById('puzzleMessage').textContent = 'Keep arranging! You\'re doing great!';
+                const correctCount = puzzlePieces.filter(p => p.currentPos === p.imageIndex).length;
+                document.getElementById('puzzleMessage').textContent = `${correctCount}/9 correct. Keep arranging!`;
                 document.getElementById('puzzleMessage').style.color = '#ffd700';
             }
         }
 
+        // Shuffle button
         document.getElementById('shuffleBtn').addEventListener('click', function() {
             if (isPuzzleSolved) {
-                puzzlePieces.forEach(p => p.currentPos = p.id);
+                puzzlePieces.forEach(p => p.currentPos = p.imageIndex);
                 isPuzzleSolved = false;
                 document.getElementById('puzzleMessage').textContent = 'Puzzle reset! Try again!';
                 document.getElementById('puzzleMessage').style.color = '#ffd700';
             }
             shufflePieces();
-            renderPuzzle();
-            document.getElementById('puzzleMessage').textContent = 'Puzzle shuffled! Try again!';
+            const images = JSON.parse(document.getElementById('puzzleContainer').dataset.images);
+            renderPuzzle(images);
+            document.getElementById('puzzleMessage').textContent = 'Puzzle shuffled! Arrange 1–9!';
             document.getElementById('puzzleMessage').style.color = '#ffd700';
         });
 
@@ -2676,8 +2726,8 @@
         page10.classList.add('hidden');
         resetButtonPositions();
 
-        console.log('🎀 Rakhi + Birthday Puzzle with Video Page loaded!');
-        console.log('🧩 Puzzle image: ' + getPuzzleImage());
+        console.log('🎀 Rakhi + Birthday Puzzle (9 Images) loaded!');
+        console.log('🧩 Puzzle images: ', getPuzzleImages());
         console.log('🎥 Video URL: ' + getVideoUrl());
     </script>
 </body>
