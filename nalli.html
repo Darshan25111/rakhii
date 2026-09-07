@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>🎀 Rakhi Special + Puzzle Game</title>
+    <title>🎂 Birthday Special</title>
 
     <!-- ========================================================== -->
     <!-- 🔽 सभी PATHS एक जगह – यहाँ बदलें (Fallback भी सेट) ======= -->
@@ -284,12 +284,12 @@
         }
 
         /* ---------- TYPOGRAPHY ---------- */
-        .rakhi-icon {
+        .birthday-icon {
             font-size: 4.8rem;
             margin-bottom: 8px;
             display: block;
             animation: bounce 2s infinite ease-in-out;
-            filter: drop-shadow(0 0 30px rgba(100, 200, 255, 0.4));
+            filter: drop-shadow(0 0 30px rgba(255, 200, 0, 0.4));
         }
 
         @keyframes bounce {
@@ -962,7 +962,7 @@
                 top: 12px;
                 left: 14px;
             }
-            .rakhi-icon {
+            .birthday-icon {
                 font-size: 3.6rem;
             }
             .toast-msg {
@@ -1308,7 +1308,7 @@
             margin-bottom: 12px;
         }
 
-        /* ----- Carousel with Glow & Hover Pause ----- */
+        /* ----- Carousel with Glow & Hover (No Click, No Pause) ----- */
         #page9 .image-carousel {
             position: relative;
             overflow: hidden;
@@ -1331,8 +1331,9 @@
             object-fit: cover;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s, box-shadow 0.3s;
-            /* Add glow animation */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            /* No cursor: pointer */
+            /* Glow animation */
             animation: carouselGlow 2s ease-in-out infinite alternate;
         }
 
@@ -1345,16 +1346,17 @@
             }
         }
 
-        /* Pause animation on hover and scale up */
-        #page9 .image-carousel:hover .carousel-track {
-            animation-play-state: paused;
-        }
-
+        /* Hover: enlarge only – no pause, no click */
         #page9 .carousel-track img:hover {
-            transform: scale(1.1);
+            transform: scale(1.15);
             box-shadow: 0 0 40px rgba(0, 255, 100, 0.9);
             z-index: 2;
             position: relative;
+        }
+
+        /* Keep animation running always */
+        #page9 .image-carousel .carousel-track {
+            animation-play-state: running !important;
         }
 
         /* Heading above carousel */
@@ -1509,19 +1511,19 @@
     <div class="confetti-burst" id="confettiBurst"></div>
 
     <!-- ========================================================== -->
-    <!-- ====== PAGE 1 – RAKHI WISH (दो बटन) ====== -->
+    <!-- ====== PAGE 1 – BIRTHDAY WISH ====== -->
     <!-- ========================================================== -->
     <div class="page active" id="page1">
         <div class="modal">
-            <span class="rakhi-icon">🎀</span>
-            <h1>Happy Raksha Bandhan!</h1>
+            <span class="birthday-icon">🎂</span>
+            <h1>Happy Birthday!</h1>
             <p class="sub-text" style="font-size: 1.3rem; line-height: 1.8;">
-                🎉 राखी का यह पावन त्योहार,<br />
-                <span class="highlight">भाई-बहन</span> के अटूट प्यार का प्रतीक है।<br />
-                हर बंधन खास हो, हर रिश्ता मज़बूत हो।<br />
+                🎉 आज का दिन खास है,<br />
+                क्योंकि आज <span class="highlight">आप</span> का दिन है!<br />
+                ढेर सारी खुशियाँ, प्यार और मुस्कानें आपके साथ रहें। ✨<br />
                 <span style="color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.4);">
-                इस राखी पर दुआएँ आपके साथ हों,<br />
-                और आपकी ज़िंदगी खुशियों से भरी हो। ✨
+                ये दिन आपके लिए है – इसे खुलकर जिएँ,<br />
+                और हर पल को यादगार बनाएँ। 🥳
                 </span>
             </p>
             <p class="sub-text" style="font-size:0.95rem; opacity:0.7; margin-top:-6px;">
@@ -1547,9 +1549,9 @@
                 🎊 CONGRATULATIONS! 🎊
             </h2>
             <p class="special-text" style="font-size: 1.6rem; line-height: 1.4; text-shadow: 0 0 25px rgba(79, 195, 247, 0.5); opacity:0.88;">
-                Aap special <span style="color: #ffd700; text-shadow: 0 0 30px rgba(79, 195, 247, 0.5);">chune</span> gaye hain...<br />
+                Aap special <span style="color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.7);">chune</span> gaye hain...<br />
                 <span style="font-size: 1.2rem; color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.7), 0 0 60px rgba(255,200,0,0.3); opacity:0.9;">
-                    Apne bhai ko treat dene ke liye! 😂🍕
+                    Apni birthday party ka treat dene ke liye! 😂🍕
                 </span>
             </p>
             <p style="color:rgba(255,255,255,0.7); font-size:0.95rem; margin-bottom:6px; text-shadow: 0 0 10px rgba(255,255,255,0.1); opacity:0.85;">
@@ -1663,7 +1665,7 @@
         <div class="modal">
             <div class="back-arrow" id="backArrowFromSummary">←</div>
             <h2 class="glow-heading" style="font-size: 2rem; color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.6);">
-                🎉 AAPKI PARTY KI BOOKING HO GAYI HAI!
+                🎉 AAPKI BIRTHDAY PARTY KI BOOKING HO GAYI HAI!
             </h2>
             <p style="color:rgba(255,255,255,0.6); font-size:0.95rem; margin-top:-4px;">
                 Here is your booking summary
@@ -1716,7 +1718,7 @@
                 <p style="text-align:center;">Wishes by your Temp Friend</p>
             </div>
 
-            <!-- Image Carousel with Glow & Hover -->
+            <!-- Image Carousel with Glow & Hover (No Click, No Pause) -->
             <div class="memories-heading">📸 Memories</div>
             <div class="image-carousel">
                 <div class="carousel-track">
@@ -1787,6 +1789,7 @@
         //  0.  BACKGROUND MUSIC
         // ================================================================
         const bgMusic = document.getElementById('bgMusic');
+        const videoElement = document.getElementById('rewardVideo');
         let musicStarted = false;
 
         // Function to start/unmute music on user interaction
@@ -1816,62 +1819,6 @@
                 console.log('⏳ Waiting for user interaction to start music...');
             });
         });
-
-        // ----- Manage music when navigating to/from video page -----
-        // When page10 becomes active, pause bgMusic; when hidden, resume.
-        // We'll use MutationObserver or simply hook into our navigateTo function.
-        // We'll override navigateTo to handle music.
-
-        const originalNavigateTo = navigateTo;
-        const originalNavigateBack = navigateBack;
-
-        function handleMusicForPage(page, isActive) {
-            if (page.id === 'page10') {
-                if (isActive) {
-                    // Pause background music
-                    if (bgMusic) {
-                        bgMusic.pause();
-                        console.log('⏸️ Background music paused (Video page active)');
-                    }
-                } else {
-                    // Resume background music if it was started
-                    if (musicStarted && bgMusic) {
-                        bgMusic.play().catch(() => {});
-                        console.log('▶️ Background music resumed');
-                    }
-                }
-            }
-        }
-
-        // Override navigateTo to include music handling
-        function navigateTo(page, transitionClass = 'page-transition-flip') {
-            // First, handle current active page (if any)
-            const activePage = document.querySelector('.page.active');
-            if (activePage) {
-                handleMusicForPage(activePage, false);
-            }
-            // Call original navigation
-            originalNavigateTo(page, transitionClass);
-            // Handle new active page
-            handleMusicForPage(page, true);
-        }
-
-        function navigateBack(targetPage, transitionClass = 'page-transition-back-flip') {
-            const activePage = document.querySelector('.page.active');
-            if (activePage) {
-                handleMusicForPage(activePage, false);
-            }
-            originalNavigateBack(targetPage, transitionClass);
-            // After transition, the target page becomes active
-            setTimeout(() => {
-                const newActive = document.querySelector('.page.active');
-                if (newActive) {
-                    handleMusicForPage(newActive, true);
-                }
-            }, 100);
-        }
-
-        // Also, when page is initially loaded, page1 is active, so no music pause needed.
 
         // ================================================================
         //  1.  BACKGROUND – CANVAS PARTICLES
@@ -1979,7 +1926,7 @@
         // ================================================================
         //  2.  FLOATING ELEMENTS
         // ================================================================
-        const emojis = ['🎀', '✨', '🌸', '💖', '🎉', '🌟', '🪄', '💫', '🌺', '🎊', '💝', '🌈', '🦋', '🎵', '💎', '🔮', '🎇'];
+        const emojis = ['🎂', '🎉', '✨', '⭐', '🌸', '💫', '🎊', '🦋', '🌈', '🎵', '💖', '🌟'];
         const container = document.getElementById('floatingElements');
 
         for (let i = 0; i < 40; i++) {
@@ -2033,11 +1980,6 @@
             }, 3000);
         }
 
-        // Modified navigateTo and navigateBack defined earlier, will override.
-        // We'll define them below after page elements are defined.
-
-        // We'll re-declare navigateTo and navigateBack after page vars.
-
         function sendToWebhook(data) {
             if (!WEBHOOK_URL) {
                 console.warn('Webhook URL not set. Data not sent.');
@@ -2054,7 +1996,7 @@
         }
 
         // ================================================================
-        //  4.  PAGE NAVIGATION
+        //  4.  PAGE NAVIGATION with Music & Video Control
         // ================================================================
         const page1 = document.getElementById('page1');
         const page2 = document.getElementById('page2');
@@ -2067,26 +2009,34 @@
         const page9 = document.getElementById('page9');
         const page10 = document.getElementById('page10');
 
-        // Redefine navigateTo and navigateBack with music handling
         function navigateTo(page, transitionClass = 'page-transition-flip') {
             const activePage = document.querySelector('.page.active');
-            if (activePage) {
-                if (activePage.id === 'page10') {
-                    // Leaving video page, resume music
-                    if (musicStarted && bgMusic) {
-                        bgMusic.play().catch(() => {});
-                    }
+
+            // If leaving video page, pause video and resume bg music
+            if (activePage && activePage.id === 'page10') {
+                if (videoElement) {
+                    videoElement.pause();
+                    videoElement.currentTime = 0;
+                    console.log('⏹️ Video paused on navigation');
                 }
+                if (musicStarted && bgMusic) {
+                    bgMusic.play().catch(() => {});
+                }
+            }
+
+            if (activePage) {
                 activePage.classList.remove('active');
                 activePage.classList.remove('page-transition-flip', 'page-transition-zoom', 'page-transition-slide',
                     'page-transition-back-flip', 'page-transition-back-zoom', 'page-transition-back-slide');
             }
+
             page.classList.remove('hidden');
             page.classList.add(transitionClass);
             void page.offsetWidth;
             requestAnimationFrame(() => {
                 page.classList.add('active');
-                // If entering video page, pause background music
+
+                // If entering video page, pause bg music
                 if (page.id === 'page10') {
                     if (bgMusic) {
                         bgMusic.pause();
@@ -2097,22 +2047,31 @@
 
         function navigateBack(targetPage, transitionClass = 'page-transition-back-flip') {
             const activePage = document.querySelector('.page.active');
-            if (activePage) {
-                if (activePage.id === 'page10') {
-                    // Leaving video page, resume music
-                    if (musicStarted && bgMusic) {
-                        bgMusic.play().catch(() => {});
-                    }
+
+            // If leaving video page, pause video and resume bg music
+            if (activePage && activePage.id === 'page10') {
+                if (videoElement) {
+                    videoElement.pause();
+                    videoElement.currentTime = 0;
+                    console.log('⏹️ Video paused on back navigation');
                 }
+                if (musicStarted && bgMusic) {
+                    bgMusic.play().catch(() => {});
+                }
+            }
+
+            if (activePage) {
                 activePage.classList.remove('active');
                 activePage.classList.remove('page-transition-flip', 'page-transition-zoom', 'page-transition-slide',
                     'page-transition-back-flip', 'page-transition-back-zoom', 'page-transition-back-slide');
             }
+
             targetPage.classList.remove('hidden');
             targetPage.classList.add(transitionClass);
             void targetPage.offsetWidth;
             requestAnimationFrame(() => {
                 targetPage.classList.add('active');
+
                 if (targetPage.id === 'page10') {
                     if (bgMusic) {
                         bgMusic.pause();
@@ -2216,12 +2175,27 @@
             navigateBack(page1, 'page-transition-back-zoom');
         }, { passive: false });
 
-        // Back arrow from Video page (Page 10) to Page 9
+        // Back arrow from Video page (Page 10) to Page 9 – with video pause
         document.getElementById('backArrowFromVideo').addEventListener('click', function() {
+            if (videoElement) {
+                videoElement.pause();
+                videoElement.currentTime = 0;
+                console.log('⏹️ Video paused via back arrow');
+            }
+            if (musicStarted && bgMusic) {
+                bgMusic.play().catch(() => {});
+            }
             navigateBack(page9, 'page-transition-back-zoom');
         });
         document.getElementById('backArrowFromVideo').addEventListener('touchstart', function(e) {
             e.preventDefault();
+            if (videoElement) {
+                videoElement.pause();
+                videoElement.currentTime = 0;
+            }
+            if (musicStarted && bgMusic) {
+                bgMusic.play().catch(() => {});
+            }
             navigateBack(page9, 'page-transition-back-zoom');
         }, { passive: false });
 
@@ -2250,13 +2224,12 @@
             const container = document.getElementById('puzzleContainer');
             const images = getPuzzleImages();
 
-            // Initialize puzzle pieces
             puzzlePieces = [];
             for (let i = 0; i < 9; i++) {
                 puzzlePieces.push({
-                    id: i,                // Unique ID
-                    imageIndex: i,        // Which image (0-8)
-                    currentPos: i         // Currently at position i (will be shuffled)
+                    id: i,
+                    imageIndex: i,
+                    currentPos: i
                 });
             }
 
@@ -2264,7 +2237,6 @@
             document.getElementById('puzzleMessage').textContent = 'Arrange pieces 1–9 in correct order!';
             document.getElementById('puzzleMessage').style.color = '#ffd700';
 
-            // Store images for rendering
             container.dataset.images = JSON.stringify(images);
 
             shufflePieces();
@@ -2272,7 +2244,6 @@
         }
 
         function shufflePieces() {
-            // Shuffle currentPos
             let positions = puzzlePieces.map(p => p.currentPos);
             for (let i = positions.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -2292,13 +2263,11 @@
                 const div = document.createElement('div');
                 div.className = 'puzzle-piece';
                 div.dataset.id = piece.id;
-                div.dataset.correctPos = piece.imageIndex; // store correct index
+                div.dataset.correctPos = piece.imageIndex;
 
-                // Set background image
                 const imgUrl = images[piece.imageIndex];
                 div.style.backgroundImage = `url('${imgUrl}')`;
 
-                // Add number overlay
                 const numSpan = document.createElement('span');
                 numSpan.textContent = piece.imageIndex + 1;
                 numSpan.style.cssText = `
@@ -2315,20 +2284,17 @@
                 `;
                 div.appendChild(numSpan);
 
-                // Mark correct if already in place
                 if (piece.currentPos === piece.imageIndex) {
                     div.classList.add('correct');
                     div.style.borderColor = '#2ecc71';
                 }
 
-                // Drag events
                 div.setAttribute('draggable', 'true');
                 div.addEventListener('dragstart', handleDragStart);
                 div.addEventListener('dragover', handleDragOver);
                 div.addEventListener('drop', handleDrop);
                 div.addEventListener('dragend', handleDragEnd);
 
-                // Touch events
                 div.addEventListener('touchstart', handleTouchStart, { passive: true });
                 div.addEventListener('touchmove', handleTouchMove, { passive: false });
                 div.addEventListener('touchend', handleTouchEnd, { passive: false });
@@ -2427,7 +2393,6 @@
             touchStartData = null;
         }
 
-        // ----- Swap & Check Functions -----
         function swapPieces(id1, id2) {
             const p1 = puzzlePieces.find(p => p.id === id1);
             const p2 = puzzlePieces.find(p => p.id === id2);
@@ -2458,7 +2423,6 @@
             }
         }
 
-        // Shuffle button
         document.getElementById('shuffleBtn').addEventListener('click', function() {
             if (isPuzzleSolved) {
                 puzzlePieces.forEach(p => p.currentPos = p.imageIndex);
@@ -2864,9 +2828,11 @@
         page10.classList.add('hidden');
         resetButtonPositions();
 
-        console.log('🎀 Rakhi + Birthday Puzzle (9 Images) loaded!');
+        console.log('🎂 Birthday + Puzzle (9 Images) loaded!');
         console.log('🧩 Puzzle images: ', getPuzzleImages());
         console.log('🎥 Video URL: ' + getVideoUrl());
+        console.log('🎵 Music will pause when video plays, resume on back.');
+        console.log('🖼️ Carousel: No click, no pause – just hover to enlarge!');
     </script>
 </body>
 </html>
